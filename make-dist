@@ -98,7 +98,7 @@ if [ -d $WEB_DIR ] ; then
     rm -rf doc/
     mkdir -p doc/
     cp "$DEST_DIR/$FULLPKG/doc"/*.{css,html,js,txt} doc/
-    cp "$DEST_DIR/$FULLPKG/doc/manual.pdf" doc/
+    #cp "$DEST_DIR/$FULLPKG/doc/manual.pdf" doc/
     gap update.g
 fi
 
