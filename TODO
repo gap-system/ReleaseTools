@@ -1,3 +1,8 @@
+* documentation
+  - fill in all the GAPs in the README
+  - possibly split the README up
+  - convert data into MarkDown or GAPDoc
+
 * make-dist
   - make sure Mercurial support still works
   - add support for further VCS, like Bazaar?
@@ -12,4 +17,8 @@
   - also support other upload methods, e.g. via FTP, SCP, rsync, ...?
   - support BitBucket downloads?! Do they even offer an API for that?
 
-* improve 
+* possibly allow users to add a .release-config file to
+  their repositories which stores various release relevant
+  settings, e.g. the upload method (github release system? FTP server
+  and path? etc.)
+
