@@ -3,23 +3,40 @@
 # This script generates a .tar.gz, .tar.bz2 and .zip for a GAP package.
 # This requires that a tag has been set of the form "v3.1". You then
 # may invoke this script like this:
-#    ./make_dist.sh PKGNAME 3.1
-# and the rest happens automatically.
-# If a checkout of the website repository is present, this script
+#    ./make-dist PKGNAME 3.1
+# You can also leave out the package name and version, in which case
+# it will try to extract these from the PackageInfo.g file.
+# The rest happens automatically.
+# If a subdirectory named 'gh-pages' is pesent, this script
 # also copies relevant files (PackageInfo.g, documentation) there.
 
-if [ $# -lt 2 ]; then
-    echo "Usage: $0 <package> <version> [<tag-or-date>]"
+if [ $# -gt 3 ]; then
+    echo "Usage: $0 [<package> [<version> [<tag-or-date>]]]"
     exit 1
 fi
 
-PKG=$1
-VER=$2
+if [ $# -lt 1 ]; then
+    PKG=`grep -m1 'PackageName\s*:=' PackageInfo.g | \
+        sed -e 's/^.*PackageName\s*:=\s*"\([^"]*\)".*$/\1/' | \
+        tr '[A-Z]' '[a-z]'`
+else
+    PKG=$1
+fi
+if [ $# -lt 2 ]; then
+    VER=`grep -m1 'Version\s*:=' PackageInfo.g | \
+        sed -e 's/^.*Version\s*:=\s*"\([^"]*\)".*$/\1/'`
+else
+    VER=$2
+fi
 if [ $# -lt 3 ]; then
     REF=v$VER  # a 'tag' by default, but allow overriding it
 else
     REF=$3
 fi
+
+# TODO: perform sanity checks on PKG, VER, REF
+
+echo "Package $PKG, version $VER, ref $REF"
 
 FULLPKG="$PKG-$VER"
 

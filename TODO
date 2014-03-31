@@ -1,0 +1,15 @@
+* make-dist
+  - make sure Mercurial support still works
+  - add support for further VCS, like Bazaar?
+
+* upload
+  - upload release tarballs to GitHub via GitHub API v3. There are many
+    libraries for these APIs, see http://developer.github.com/libraries/
+    There is an official binding for Ruby: octokit.rb
+    For Perl, these look interesting:
+      https://github.com/fayland/perl-net-github
+      https://github.com/plu/Pithub
+  - also support other upload methods, e.g. via FTP, SCP, rsync, ...?
+  - support BitBucket downloads?! Do they even offer an API for that?
+
+* improve 

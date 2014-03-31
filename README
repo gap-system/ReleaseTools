@@ -1,0 +1,85 @@
+ReleaseTools for GAP packages
+=============================
+
+The scripts in this repository along with this README are meant to help
+GAP package authors with the process of making new releases of their
+packages. The problem with making releases is that it is quite easy
+to forget steps, which can cause a lot of extra work if you later
+need to correct that. Moreover, if one only makes a release once a
+year, it is easy to forget how this works -- making the release
+process an often unwelcome and tiresome process.
+
+The goal of this document and the tools shipped with it is to help
+GAP package authors to automate this process as much as possible,
+so that making a fresh release of a package becomes a quick and
+painless undertaking.
+
+
+Preparations
+============
+TODO:
+- talk about encoding information in as few places as possible. Ideally
+  things like the version and release date should be in a single spot,
+  which has to be changed for a release, all other references to them
+  should be generated from that spot.
+  Talk about ways to achieve that.
+  Mention AutoDoc as a useful helper
+- talk about using GitHub releases system
+- talk about https://github.com/fingolfin/GitHubPagesForGAP
+- update https://github.com/fingolfin/PackageMaker to (optionally?)
+  set up everything for this process
+- ...
+
+
+Examples
+========
+Packages that are (mostly) following the release process outlined here
+include the following:
+
+https://github.com/neunhoef/cvec
+https://github.com/neunhoef/io
+https://github.com/neunhoef/genss
+https://github.com/neunhoef/orb
+https://github.com/neunhoef/recog
+https://github.com/neunhoef/recogbase
+
+
+The following packages plan to adopt this process:
+
+https://github.com/gap-system/anupq
+https://github.com/gap-system/libsing
+https://github.com/fingolfin/NormalizInterface
+https://github.com/fingolfin/nq
+https://github.com/fingolfin/polenta
+
+
+The release process
+===================
+
+1) Update the version and release date in PackageInfo.g
+
+2) If you are *not* using AutoDoc to generating the title page of your
+   package manual, also update the release date and version in doc/PKGNAME.xml
+
+3) Make sure that files like HISTORY and CHANGES are up-to-date (if you
+   have those).
+
+4) Build the documentation (if you set this one up right, it will also
+   update the VERSION file, if you have any, and possibly also the manual
+   title page, provided you are using AutoDoc)
+
+5) Commit any outstanding changes (to PackageInfo.g, VERSION, manual, etc.)
+
+6) Tag the release; if you are about to release version 1.2.3, then use this:
+    git tag v1.2.3
+
+7) Create the release archives using the make-dist.sh script included here
+    make-dist.sh
+
+8) Ideally, you now test the resulting tarballs. If you are unhappy
+   with the outcome, or for some other reason decide that you need
+   more changes, do these and go back to step 5 (in step 6, you
+   now need to pass "-f" to "git tag" to force it to move the tag.
+
+9) If you are happy with everything, push your changes out, including tags
+    git push master --tags
