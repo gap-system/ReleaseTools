@@ -1,4 +1,150 @@
-#!/bin/sh
+#!/usr/bin/env perl
+use strict;
+use warnings;
 
-echo "TODO: implement uploading of binaries"
+use Data::Dumper;
+use File::Basename 'fileparse';
+use File::Type;
+use Getopt::Long::Descriptive;
 
+use Pithub::Repos::Releases 0.01023;
+
+
+my ($opt, $usage) = describe_options(
+    'upload %o <files>',
+    [ 'token=s', "a GitHub access token" ],
+    [ 'user=s', "the GitHub username" ],
+    [ 'repo=s', "the GitHub repository name" ],
+    [],
+    [ 'tag=s', "the name of the release tag", { required => 1  } ],
+    [ 'name=s', "the name of the release (defaults to tag name)" ],
+    [ 'notes=s', "the name of a file containg release notes" ],
+    [ 'draft', "the release is a draft" ],
+    [ 'prerelease', "the release is a prerelease" ],
+    [ 'force|f', "force an upload even if the release already exists" ],
+    #[ 'port|p=i',   "the port to connect to",   { default  => 79 } ],
+    [],
+    #[ 'verbose|v',  "print extra stuff"            ],
+    [ 'help',       "print usage message and exit" ],
+);
+
+print($usage->text), exit if $opt->help;
+
+# TODO: If PackageInfo.g is present, scan that for
+# hints on version, github username and repo...
+
+my ($token, $user, $repo);
+
+$user = $opt->user || $ENV{GITHUB_USER} || `git config --get github.user`;
+chomp($user);
+
+$token = $opt->token || $ENV{GITHUB_TOKEN} || `git config --get github.token`;
+chomp($token);
+
+$repo = $opt->repo || $ENV{GITHUB_REPO} || "";
+chomp($repo);
+
+if ($repo eq "") {
+    # TODO: Assume we are in the current repository and try to figure repo
+    # and username out from there
+
+    die "Could not determine repository name\n";
+}
+
+my $release_notes = "";
+if ($opt->notes) {
+    # read the file into memory
+    #open my $fh, '<:unix', $opt->notes or die "Couldn't open $opt->notes: $!";
+    #read $fh, my $release_notes, -s $fh or die "Couldn't read $opt->notes: $!";
+    open my $fh, '<', $opt->notes or die "Couldn't open $opt->notes: $!";
+    $release_notes = do { local $/; <$fh> } or die "Couldn't read $opt->notes: $!";
+}
+
+
+print "Releasing to GitHub repository $user/$repo\n";
+
+my $releases = Pithub::Repos::Releases->new(
+    repo  => $repo,
+    token => $token,
+    user  => $user,
+);
+
+# Get current list of releases and check
+# if there is a conflict there.
+my $releases_list = $releases->list( user => $user, repo => $repo );
+unless ( $releases_list->success ) {
+    die "failed to retrieve list of releases: %s\n", $releases_list->response->status_line;
+}
+
+print "List of existing releases:\n";
+
+my $release;
+while ( my $row = $releases_list->next ) {
+    printf "  %s\n", $row->{name};
+    $release = $row if $row->{name} eq $opt->tag;
+}
+
+if ($release) {
+    if ($opt->force) {
+        warn "WARNING: release already exists, continuing anyway due to -f/--force\n";
+    } else {
+        die "ERROR: release already exists, use -f/--force\n";
+    }
+    
+    # Delete the release so that we can recreate it
+    $releases->delete(release_id =>  $release->{id} );
+
+    # TODO: Perhaps don't be quite that aggressive
+    # and instead just delete all assets? In that case,
+    # grab the existing release like this:
+    #$release = $releases->get( release_id => $release->{id} );
+}
+
+$release = $releases->create(
+    data => {
+        name        =>  ($opt->name ? $opt->name : $opt->tag),
+        tag_name    =>  $opt->tag,
+        #target_commitisih => 'master',  # TODO: allow overriding this?
+        prerelease  => ($opt->prerelease ? "true" : "false"),
+        draft       => ($opt->draft ? "true" : "false"),
+        # FIXME: draft does not work??
+        body        => $release_notes,
+    }
+);
+
+
+# Upload all files listed by the user
+foreach my $filename (@ARGV) {
+
+    # extract just the filename, to be used as label for the
+    # release asset (this is necessary in case $file is something
+    # like "../tmp/archive.tar.gz")
+    my $basename = fileparse($filename);
+
+    # guess the content MIME type
+    my $content_type = File::Type->new->checktype_filename($filename);
+
+    print "Uploading $filename as $basename (MIME type $content_type)\n";
+
+    # read the file into memory
+    open my $fh, '<:unix', $filename or die "Couldn't open $filename: $!";
+    read $fh, my $data, -s $fh or die "Couldn't read $filename: $!";
+
+    # finally upload it as an asset to the release
+    my $asset = $releases->assets->create(
+        release_id   => $release->content->{id},
+        name         => $basename,
+        data         => $data,
+        content_type => $content_type,
+    );
+    
+    unless ( $asset->success ) {
+        # TODO: if the asset already exists, then delete it first?
+        # perhaps if the -f flag is given?
+        # Alternatively, just tell the user to delete the release
+        # (for this a --delete option might be a good idea?
+    }
+    
+    warn "ERROR: Upload failed\n" unless ( $asset->success );
+
+}
