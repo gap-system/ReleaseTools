@@ -1,0 +1,57 @@
+#!/bin/sh -e
+
+# This script combines steps 5 to 13 of the README into a single
+# step. But beware of the dangers of this, e.g. committing
+# and pushing changes fully automatically to your repository
+# is perhaps not the best idea... So use at your own risk!
+
+
+if [ $# -gt 3 ]; then
+    echo "Usage: $0 [<package> [<version> [<tag>]]]"
+    exit 1
+fi
+
+if [ $# -lt 1 ]; then
+    PKG=`grep -m1 'PackageName\s*:=' PackageInfo.g | \
+        sed -e 's/^.*PackageName\s*:=\s*"\([^"]*\)".*$/\1/' | \
+        tr '[A-Z]' '[a-z]'`
+else
+    PKG=$1
+fi
+if [ $# -lt 2 ]; then
+    VER=`grep -m1 'Version\s*:=' PackageInfo.g | \
+        sed -e 's/^.*Version\s*:=\s*"\([^"]*\)".*$/\1/'`
+else
+    VER=$2
+fi
+if [ $# -lt 3 ]; then
+    TAG=v$VER  # a 'tag' by default, but allow overriding it
+else
+    TAG=$3
+fi
+
+# TODO: perform sanity checks on PKG, VER, TAG
+
+echo "Package $PKG, version $VER, tag $TAG"
+
+# Path to other ReleaseTools scripts
+DIR=`dirname $0`
+
+echo git pull --ff-only
+echo gap -A makedoc.g
+echo git commit --all -m "Version $VER"
+echo git tag -f $TAG
+echo $DIR/make-dist $PKG $VER $TAG
+
+# WARNING: the following is kind of risky...
+#echo git push master --tags
+echo git push --tags
+
+echo $DIR/upload --tag $TAG --repo $PKG tmp/$PKG-$VER.*
+
+echo cd gh-pages
+echo git pull --ff-only
+echo git commit --all -m "Update website for version $VER"
+echo git push
+echo cd ..
+
