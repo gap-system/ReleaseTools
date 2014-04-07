@@ -11,7 +11,7 @@
 # also copies relevant files (PackageInfo.g, documentation) there.
 
 if [ $# -gt 3 ]; then
-    echo "Usage: $0 [<package> [<version> [<tag-or-date>]]]"
+    echo "Usage: $0 [<package> [<version> [<tag>]]]"
     exit 1
 fi
 
@@ -61,8 +61,10 @@ else
     exit 1
 fi
 
-echo "Removing unnecessary files"
+
 cd "$DEST_DIR/$FULLPKG"
+
+echo "Removing unnecessary files"
 rm -f .git* .hg* .cvs*
 
 if [ -x autogen.sh ] ; then
@@ -70,10 +72,11 @@ if [ -x autogen.sh ] ; then
     sh autogen.sh
 fi
 
-# Build documentation and later remove aux files created by this.
-echo "Building GAP package documentation"
-gap -A makedoc.g #> /dev/null 2> /dev/null
-rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,lab,log,out,pnr,tex,toc,tst}
+if [ -e makedoc.g ] ; then
+    echo "Building GAP package documentation"
+    gap -A makedoc.g #> /dev/null 2> /dev/null
+    rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,lab,log,out,pnr,tex,toc,tst}
+fi
 
 echo "Creating tarball $FULLPKG.tar"
 cd "$DEST_DIR"
