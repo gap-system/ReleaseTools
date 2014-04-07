@@ -2,7 +2,6 @@
 use strict;
 use warnings;
 
-use Data::Dumper;
 use File::Basename 'fileparse';
 use File::Type;
 use Getopt::Long::Descriptive;
