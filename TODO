@@ -1,24 +1,29 @@
 * documentation
-  - fill in all the GAPs in the README
-  - possibly split the README up
-  - convert data into MarkDown or GAPDoc
+  - completely document everything
 
 * make-dist
   - make sure Mercurial support still works
-  - add support for further VCS, like Bazaar?
+  - add support for further VCS, like Bazaar or Subversion?
+  - right now, after building the manual with `gap -A makedoc.g`,
+    we manually remove various auxiliary files like `doc/*.aux`.
+    It would be better to improve GAPDoc to either not build the
+    manual inside the doc dir, or to cleanup after itself.
+    At least optionally.
+  - add command line options to change which archive formats
+    to build. Even better, automatically detect this from
+    the `ArchiveFormats` field in `PackageInfo.g`.
 
 * upload
-  - upload release tarballs to GitHub via GitHub API v3. There are many
-    libraries for these APIs, see http://developer.github.com/libraries/
-    There is an official binding for Ruby: octokit.rb
-    For Perl, these look interesting:
-      https://github.com/fayland/perl-net-github
-      https://github.com/plu/Pithub
-  - also support other upload methods, e.g. via FTP, SCP, rsync, ...?
+  - improve usability
+  - allow also "--repo USER/REPO"?
+  - support other upload methods, e.g. via FTP, SCP, rsync, ...?
   - support BitBucket downloads?! Do they even offer an API for that?
 
 * possibly allow users to add a .release-config file to
   their repositories which stores various release relevant
   settings, e.g. the upload method (github release system? FTP server
   and path? etc.)
+  Alternatively, store these things in PackageInfo.g?
+
+
 
