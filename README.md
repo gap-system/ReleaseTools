@@ -39,7 +39,7 @@ TODO:
 
 # The release process
 Suppose we want to release version 1.2.3 of a package named `FOO`.
-Suppose furthermore that director `foo` contains a clone of the
+Suppose furthermore that directory `foo` contains a clone of the
 repository.
 
 1. Make sure we are on the right branch and have the latest version.
@@ -103,8 +103,8 @@ repository.
    as necessary (in step 7, you now need to pass "-f" to "git tag"
    to force it to move the tag).
 
-10. If you are happy with everything, push your changes out, including the new
-    tag, to the GitHub.
+10. If you are happy with everything, push your changes, including the new
+    tag, to GitHub.
 
     ```
     git push master --tags
