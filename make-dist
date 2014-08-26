@@ -93,7 +93,11 @@ fi
 
 if [ -e makedoc.g ] ; then
     echo "Building GAP package documentation"
-    gap -A makedoc.g #> /dev/null 2> /dev/null
+#    gap -A makedoc.g #> /dev/null 2> /dev/null
+    gap -A <<GAPInput
+SetPackagePath("$PKG", ".");
+Read("makedoc.g");
+GAPInput
     rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,lab,log,out,pnr,tex,toc,tst}
 fi
 
