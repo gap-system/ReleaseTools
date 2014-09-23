@@ -34,23 +34,35 @@ if [ $# -gt 3 ]; then
     exit 1
 fi
 
-if [ $# -lt 1 ]; then
-    PKG=`grep -m1 'PackageName\s*:=' PackageInfo.g | \
-        sed -e 's/^.*PackageName\s*:=\s*"\([^"]*\)".*$/\1/' | \
-        tr '[A-Z]' '[a-z]'`
-else
+if [ $# -lt 3 ]; then
+
+eval $(gap -A -q -b <<EOF
+# HACK
+MakeReadWriteGlobal("SetPackageInfo");
+SetPackageInfo:=function(pkg)
+    Print("PKG=\"",pkg.PackageName,"\"\n");
+    Print("VER=\"",pkg.Version,"\"\n");
+end;;
+Read("PackageInfo.g");
+QUIT;
+EOF
+)
+
+fi
+
+
+if [ $# -ge 1 ]; then
     PKG=$1
 fi
-if [ $# -lt 2 ]; then
-    VER=`grep -m1 'Version\s*:=' PackageInfo.g | \
-        sed -e 's/^.*Version\s*:=\s*"\([^"]*\)".*$/\1/'`
-else
+
+if [ $# -ge 2 ]; then
     VER=$2
 fi
-if [ $# -lt 3 ]; then
-    REF=v$VER  # a 'tag' by default, but allow overriding it
-else
+
+if [ $# -ge 3 ]; then
     REF=$3
+else
+    REF=v$VER  # a 'tag' by default, but allow overriding it
 fi
 
 # TODO: perform sanity checks on PKG, VER, REF
