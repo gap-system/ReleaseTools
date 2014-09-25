@@ -40,7 +40,7 @@ eval $(gap -A -q -b <<EOF
 # HACK
 MakeReadWriteGlobal("SetPackageInfo");
 SetPackageInfo:=function(pkg)
-    Print("PKG=\"",pkg.PackageName,"\"\n");
+    Print("PKG=\"",LowercaseString(pkg.PackageName),"\"\n");
     Print("VER=\"",pkg.Version,"\"\n");
 end;;
 Read("PackageInfo.g");
