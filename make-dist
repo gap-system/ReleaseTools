@@ -101,6 +101,7 @@ rm -f .git* .hg* .cvs*
 if [ -x autogen.sh ] ; then
     echo "Generating build system files"
     sh autogen.sh
+    rm -rf autom4te.cache
 fi
 
 if [ -e makedoc.g ] ; then
