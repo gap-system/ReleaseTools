@@ -110,8 +110,7 @@ repository.
     git push master --tags
     ```
 
-11. Now upload the archives to GitHub. You can do this manually, but we also
-    include an `upload` script to do this for you:
+11. Now upload the archives to GitHub. You can do this manually from https://github.com/USER/FOO/releases/tag/v1.2.3 . We also include an `upload` script to do this for you:
 
     ```
     PATH/TO/ReleaseTools/upload --tag v1.2.3 --repo FOO tmp/foo-1.2.3.*
