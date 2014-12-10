@@ -80,7 +80,7 @@ repository.
 6. Commit a changes to `PackageInfo.g`, `VERSION`, manual, etc.:
 
    ```
-   git commit -all -m "Version 1.2.3"
+   git commit --all -m "Version 1.2.3"
    ```
 
 7. Tag the release:
