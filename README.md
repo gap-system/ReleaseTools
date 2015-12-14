@@ -58,16 +58,16 @@ repository.
     cd gh-pages && git pull && cd ..
     ```
 
-2. Update version and release date in `PackageInfo.g`.
+3. Update the version and release date in `PackageInfo.g`.
 
-3. If you are *not* using AutoDoc to generating the title page of your
+4. If you are *not* using AutoDoc to generating the title page of your
    package manual, also adjust the release date and version in your manual
    (typically this means `doc/FOO.xml`).
 
-4. Make sure that any other files containing the version and release date
+5. Make sure that any other files containing the version and release date
    are updated (e.g. a `CHANGES` with release notes).
 
-5. Build the documentation:
+6. Build the documentation:
 
    ```
    gap -A makedoc.g
@@ -77,19 +77,19 @@ repository.
    also take care of updating the version information in other files
    (like the VERSION file, your manual, your `configure` script etc.)
 
-6. Commit a changes to `PackageInfo.g`, `VERSION`, manual, etc.:
+7. Commit a changes to `PackageInfo.g`, `VERSION`, manual, etc.:
 
    ```
    git commit --all -m "Version 1.2.3"
    ```
 
-7. Tag the release:
+8. Tag the release:
 
     ```
     git tag v1.2.3
     ```
 
-8. Create the release archives using the `make-dist` script included here:
+9. Create the release archives using the `make-dist` script included here:
 
     ```
     PATH/TO/ReleaseTools/make-dist
@@ -97,20 +97,20 @@ repository.
    
    If this does not work, please refer to the section discussing `make-dist`. 
 
-9. Test the release archives created by the previous step. If you are unhappy
+10. Test the release archives created by the previous step. If you are unhappy
    with the outcome, or for some other reason decide that you need
    more changes, do these and go back and repeat previous steps
    as necessary (in step 7, you now need to pass "-f" to "git tag"
    to force it to move the tag).
 
-10. If you are happy with everything, push your changes, including the new
+11. If you are happy with everything, push your changes, including the new
     tag, to GitHub.
 
     ```
     git push master --tags
     ```
 
-11. Now upload the archives to GitHub. You can do this manually from https://github.com/USER/FOO/releases/tag/v1.2.3 . We also include an `upload` script to do this for you:
+12. Now upload the archives to GitHub. You can do this manually from https://github.com/USER/FOO/releases/tag/v1.2.3 . We also include an `upload` script to do this for you:
 
     ```
     PATH/TO/ReleaseTools/upload --tag v1.2.3 --repo FOO tmp/foo-1.2.3.*
@@ -119,10 +119,10 @@ repository.
     For this to work, you need to first setup a GitHub token etc.,
     please refer to the section discussing the `upload` script.
 
-12. Verify that everything went fine by visiting
+13. Verify that everything went fine by visiting
      https://github.com/USER/FOO/releases/tag/v1.2.3
 
-13. Update the website.
+14. Update the website.
 
     ```
     cd gh-pages && git commit --all -m "Update website for version 1.2.3" && git push
