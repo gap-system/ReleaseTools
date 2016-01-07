@@ -301,6 +301,8 @@ if [ ! -d "$WEB_DIR" ] ; then
 fi
 
 cd "$WEB_DIR"
+git pull --ff-only
+
 cp "$TMP_DIR/$BASENAME/README"* .
 cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
 rm -rf doc/
