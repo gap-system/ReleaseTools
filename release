@@ -42,6 +42,7 @@ from the PackageInfo.g file, and performs the releases process.
 
 Actions
   -h,  --help                      display this help text and exit
+  -p,  --push                      also peform the final push, completing the release
 
 Custom settings
   -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]
@@ -54,8 +55,10 @@ Notes:
 * The repository name is extracted from TODO
 * To learn how to create a GitHub access token, please consult
   https://help.github.com/articles/creating-an-access-token-for-command-line-use/
-* The ~/.github_shell_token.
-* TODO
+* Without the --push option, all steps are performed, except for the final push
+  of the gh-pages changes. These changes are what make the release visible
+  to the GAP package distribution system.
+  Please consult the README for an explanation.
 EOF
     exit 0
 }
@@ -78,6 +81,8 @@ WEB_DIR="$SRC_DIR/gh-pages"
 # undocumented feature: instead of using "--token <foo>",
 # one can also set the environment variable TOKEN=foo
 # and similar for REPO, TAG
+
+PUSH=no
 while true; do
   case "$1" in
     -h | --help ) help ;;
@@ -86,6 +91,8 @@ while true; do
     -t | --tag ) TAG="$2"; shift 2 ;;
     -r | --repository ) REPO="$2"; shift 2 ;;
     --token ) TOKEN="$2"; shift 2 ;;
+    -p | --push ) PUSH=yes; shift ;;
+    --no-push ) PUSH=no; shift ;;
     --upload ) UPLOAD=yes; shift ;;
     --no-upload ) UPLOAD=no; shift ;;
     -- ) shift; break ;;
@@ -314,9 +321,12 @@ gap update.g
 git add -A .
 git commit -m "Update website for version $VERSION"
 
-git push --set-upstream gap gh-pages
+if [ x$PUSH = xyes ] ; then
+    echo "Pushing website changes"
+    git push
+    echo "Done"
+else
+    echo "To complete your release, run 'git push' in your gh-pages directory"
+fi
 
-
-echo ""
-echo "Done"
 exit 0
