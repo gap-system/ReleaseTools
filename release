@@ -2,7 +2,7 @@
 #
 # ReleaseTools - a set of shells script for making GAP package releases
 #
-# Copyright (c) 2013-2014 Max Horn
+# Copyright (c) 2013-2016 Max Horn
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,11 +18,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
-
-# This script combines steps 5 to 13 of the README into a single
-# step. But beware of the dangers of this, e.g. committing
-# and pushing changes fully automatically to your repository
-# is perhaps not the best idea... So use at your own risk!
 
 
 if [ ! -f PackageInfo.g ] ; then
@@ -252,7 +247,6 @@ response=$(curl -s -S -H "Content-Type: application/json" \
 
 RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
 
-echo "RELEASE_ID = $RELEASE_ID"
 # TODO: error handling?
 
 
