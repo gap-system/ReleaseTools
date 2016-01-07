@@ -38,7 +38,7 @@ Custom settings
   -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]
   -r,  --repository <repository>   set GitHub repository (as `USERNAME/PKGNAME`)
   --token <oauth>                  GitHub access token
-  --force                          if a release with the same name already exists: overwrite it
+  -f, --force                      if a release with the same name already exists: overwrite it
 
 Notes:
 * The package name and version and the list of archive formats
@@ -98,7 +98,7 @@ while true; do
     --no-push ) PUSH=no; shift ;;
     --upload ) UPLOAD=yes; shift ;;
     --no-upload ) UPLOAD=no; shift ;;
-    --force ) FORCE=yes; shift ;;
+    -f | --force ) FORCE=yes; shift ;;
     --no-force ) FORCE=no; shift ;;
     -- ) shift; break ;;
     * ) break ;;
