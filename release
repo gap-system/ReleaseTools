@@ -20,11 +20,6 @@
 #
 
 
-if [ ! -f PackageInfo.g ] ; then
-    echo "ERROR: unable to read PackageInfo.g file, use --help for instructions"
-    exit 1
-fi
-
 help() {
 cat <<EOF
 Usage: $0 [OPTIONS]
@@ -65,6 +60,17 @@ EOF
 define() {
     IFS='\n' read -r -d '' $1 || true
 }
+
+error() {
+    printf "\033[31mERROR: "
+    echo $*
+    printf "\033[0m"
+    exit 1
+}
+
+if [ ! -f PackageInfo.g ] ; then
+    error "unable to read PackageInfo.g file, use --help for instructions"
+fi
 
 ######################################################################
 #
@@ -135,8 +141,7 @@ if [ x"$TAG" = "x" ] ; then
     TAG=v$VERSION
 fi
 if ! git show-ref -q $TAG ; then
-    echo "Invalid tag $TAG"
-    exit 1
+    error "tag $TAG does not exist"
 fi;
 echo "Using git tag $TAG"
 
@@ -156,8 +161,7 @@ echo "Using archive basename $BASENAME"
 # Determine the GitHub repository and derive API urls from it
 #
 if [ x"$REPO" = "x" ] ; then
-    echo "ERROR: could not guess GitHub repository"
-    exit 1
+    error "could not guess GitHub repository"
 fi
 echo "Using GitHub repository $REPO"
 
@@ -176,8 +180,7 @@ if [ x$TOKEN = x -a -r ~/.github_shell_token ] ; then
     TOKEN=`cat ~/.github_shell_token`
 fi
 if [ x$TOKEN = x ] ; then
-    echo "ERROR: could not determine GitHub access token"
-    exit 1
+    error "could not determine GitHub access token"
 fi
 
 
@@ -210,7 +213,7 @@ if [ -x autogen.sh ] ; then
 fi
 
 if [ -e makedoc.g ] ; then
-    echo "Building GAP package documentation"
+    echo "Building GAP package documentation for archives"
     gap -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 Read("makedoc.g");
@@ -237,8 +240,7 @@ if ! echo "${response}" | fgrep -q "Not Found" ; then
         RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
         response=$(curl -s -S -X DELETE $API_URL/$RELEASE_ID?access_token=$TOKEN)
     else
-        echo "ERROR: release $TAG already exists on GitHub, aborting (use --force to override this)"
-        exit 1
+        error "release $TAG already exists on GitHub, aborting (use --force to override this)"
     fi
 fi
 
@@ -289,8 +291,7 @@ for EXT in $ARCHIVE_FORMATS ; do
         ;;
     esac
     if [ ! -f $FULLNAME ] ; then
-        echo "Error creating $FULLNAME, aborting"
-        exit 1
+        error "failed creating $FULLNAME"
     fi
     echo "Uploading $ARCHIVENAME with mime type $MIMETYPE"
     response=$(curl --fail -s -S -X POST $UPLOAD_URL/$RELEASE_ID/assets?name=$ARCHIVENAME \
