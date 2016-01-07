@@ -132,7 +132,7 @@ zip -r9 --quiet $FULLPKG.zip $FULLPKG
 if [ -d $WEB_DIR ] ; then
     echo "Updating website"
     cd "$WEB_DIR"
-    cp "$DEST_DIR/$FULLPKG/README" .
+    cp "$DEST_DIR/$FULLPKG/README"* .
     cp "$DEST_DIR/$FULLPKG/PackageInfo.g" .
     rm -rf doc/
     mkdir -p doc/
