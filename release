@@ -118,7 +118,7 @@ Print("ARCHIVE_FORMATS=\"",GAPInfo.PackageInfoCurrent.ArchiveFormats,"\"\n");
 tmp := SplitString(GAPInfo.PackageInfoCurrent.ArchiveURL, "/");;
 if Length(tmp) = 9 and tmp{[1,2,3,6,7]} = ["https:","","github.com","releases","download"] then
     Print("REPO=\"",Concatenation(tmp[4],"/",tmp[5]),"\"\n");
-    Print("TAG=\"",tmp[8],"\"\n");
+    Print("GAP_TAG=\"",tmp[8],"\"\n");
     len := Length(tmp[9]) - Length(GAPInfo.PackageInfoCurrent.Version);
     if len > 0 then
         Print("BASENAME=\"",tmp[9]{[1..len]},"\"\n");
@@ -138,7 +138,14 @@ echo "Package $PKG $VERSION"
 # to the currently checked out revision?
 #
 if [ x"$TAG" = "x" ] ; then
-    TAG=v$VERSION
+    if [ x"$GAP_TAG" = "x" ] ; then
+        TAG=v$VERSION
+    else
+        TAG=$GAP_TAG
+    fi
+fi
+if [ "$TAG" != "$GAP_TAG" ] ; then
+    error "given tag $TAG does not match tag $GAP_TAG found in PackageInfo.g"
 fi
 if ! git show-ref -q $TAG ; then
     error "tag $TAG does not exist"
