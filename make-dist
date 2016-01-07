@@ -37,13 +37,9 @@ fi
 if [ $# -lt 3 ]; then
 
 eval $(gap -A -q -b <<EOF
-# HACK
-MakeReadWriteGlobal("SetPackageInfo");
-SetPackageInfo:=function(pkg)
-    Print("PKG=\"",pkg.PackageName,"\"\n");
-    Print("VER=\"",pkg.Version,"\"\n");
-end;;
 Read("PackageInfo.g");
+Print("PKG=\"",GAPInfo.PackageInfoCurrent.PackageName,"\"\n");
+Print("VER=\"",GAPInfo.PackageInfoCurrent.Version,"\"\n");
 QUIT;
 EOF
 )
