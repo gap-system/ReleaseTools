@@ -43,6 +43,7 @@ Custom settings
   -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]
   -r,  --repository <repository>   set GitHub repository (as `USERNAME/PKGNAME`)
   --token <oauth>                  GitHub access token
+  --force                          if a release with the same name already exists: overwrite it
 
 Notes:
 * The package name and version and the list of archive formats
@@ -78,6 +79,7 @@ WEB_DIR="$SRC_DIR/gh-pages"
 # and similar for REPO, TAG
 
 PUSH=no
+FORCE=no
 while true; do
   case "$1" in
     -h | --help ) help ;;
@@ -90,6 +92,8 @@ while true; do
     --no-push ) PUSH=no; shift ;;
     --upload ) UPLOAD=yes; shift ;;
     --no-upload ) UPLOAD=no; shift ;;
+    --force ) FORCE=yes; shift ;;
+    --no-force ) FORCE=no; shift ;;
     -- ) shift; break ;;
     * ) break ;;
   esac
@@ -228,8 +232,14 @@ function jsonval {
 # check if release already exists
 response=$(curl -s -S -X GET $API_URL/tags/$TAG?access_token=$TOKEN)
 if ! echo "${response}" | fgrep -q "Not Found" ; then
-    echo "ERROR: release $TAG already exists on GitHub, aborting"
-    exit 1
+    if [ x$FORCE = xyes ] ; then
+        echo "Deleting existing release $TAG from GitHub"
+        RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
+        response=$(curl -s -S -X DELETE $API_URL/$RELEASE_ID?access_token=$TOKEN)
+    else
+        echo "ERROR: release $TAG already exists on GitHub, aborting (use --force to override this)"
+        exit 1
+    fi
 fi
 
 # Create the release by sending suitable JSON
