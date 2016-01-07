@@ -34,7 +34,8 @@ if [ $# -gt 3 ]; then
     exit 1
 fi
 
-if [ $# -lt 3 ]; then
+# extract package name and version from PackageInfo.g
+if [ $# -lt 2 ]; then
 
 eval $(gap -A -q -b <<EOF
 Read("PackageInfo.g");
