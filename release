@@ -196,6 +196,26 @@ echo ""
 
 ######################################################################
 #
+# Verify there are no uncommitted changes. Also, run makedoc.g (if
+# present), as that also can uncover mistakes (e.g. for projects which
+# generate doc/title.xml from PackageInfo.g, it is easy to forget that
+# when making the release commit).
+#
+if [ -e makedoc.g ] ; then
+    echo "Building GAP package documentation"
+    gap -A -q <<GAPInput
+SetPackagePath("$PKG", ".");
+Read("makedoc.g");
+GAPInput
+fi
+
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+    error "uncommitted changes detected"
+fi
+
+
+######################################################################
+#
 # Get fresh (unmodified) copies of the files, and generate some stuff
 #
 
