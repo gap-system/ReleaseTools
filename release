@@ -61,8 +61,22 @@ define() {
     IFS='\n' read -r -d '' $1 || true
 }
 
+notice() {
+    printf "\033[32m"
+    echo $*
+    printf "\033[0m"
+}
+
+warning() {
+    printf "\033[33m"
+    printf "WARNING: "
+    echo $*
+    printf "\033[0m"
+}
+
 error() {
-    printf "\033[31mERROR: "
+    printf "\033[31m"
+    printf "ERROR: "
     echo $*
     printf "\033[0m"
     exit 1
@@ -109,7 +123,7 @@ done
 #
 # Determine package name and version, and other meta data
 #
-echo "Extracting information from PackageInfo.g..."
+notice "Extracting information from PackageInfo.g..."
 eval $(gap -A -q -b <<EOF
 Read("PackageInfo.g");
 Print("PKG=\"",GAPInfo.PackageInfoCurrent.PackageName,"\"\n");
@@ -128,7 +142,7 @@ QUIT;
 EOF
 )
 
-echo "Package $PKG $VERSION"
+notice "Package $PKG $VERSION"
 
 
 ######################################################################
@@ -150,7 +164,7 @@ fi
 if ! git show-ref -q $TAG ; then
     error "tag $TAG does not exist"
 fi;
-echo "Using git tag $TAG"
+notice "Using git tag $TAG"
 
 ######################################################################
 #
@@ -161,7 +175,7 @@ if [ x"$BASENAME" = "x" ] ; then
     BASENAME="$PKG-"
 fi
 BASENAME="$BASENAME$VERSION"
-echo "Using archive basename $BASENAME"
+notice "Using archive basename $BASENAME"
 
 ######################################################################
 #
@@ -170,7 +184,7 @@ echo "Using archive basename $BASENAME"
 if [ x"$REPO" = "x" ] ; then
     error "could not guess GitHub repository"
 fi
-echo "Using GitHub repository $REPO"
+notice "Using GitHub repository $REPO"
 
 API_URL=https://api.github.com/repos/$REPO/releases
 UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
@@ -202,7 +216,7 @@ echo ""
 # when making the release commit).
 #
 if [ -e makedoc.g ] ; then
-    echo "Building GAP package documentation"
+    notice "Building GAP package documentation"
     gap -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 Read("makedoc.g");
@@ -223,24 +237,24 @@ fi
 mkdir -p "$TMP_DIR"
 rm -rf "$TMP_DIR"/$BASENAME*
 
-echo "Exporting repository content for tag '$TAG'"
+notice "Exporting repository content for tag '$TAG'"
 git archive --prefix=$BASENAME/ $TAG | tar xf - -C "$TMP_DIR/"
 
 
 # Build the package documentation, run autoconf, etc.
 cd "$TMP_DIR/$BASENAME"
 
-echo "Removing unnecessary files"
+notice "Removing unnecessary files"
 rm -f .git* .hg* .cvs*
 
 if [ -x autogen.sh ] ; then
-    echo "Generating build system files"
+    notice "Generating build system files"
     sh autogen.sh
     rm -rf autom4te.cache
 fi
 
 if [ -e makedoc.g ] ; then
-    echo "Building GAP package documentation for archives"
+    notice "Building GAP package documentation for archives"
     gap -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 Read("makedoc.g");
@@ -263,7 +277,7 @@ function jsonval {
 response=$(curl -s -S -X GET $API_URL/tags/$TAG?access_token=$TOKEN)
 if ! echo "${response}" | fgrep -q "Not Found" ; then
     if [ x$FORCE = xyes ] ; then
-        echo "Deleting existing release $TAG from GitHub"
+        notice "Deleting existing release $TAG from GitHub"
         RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
         response=$(curl -s -S -X DELETE $API_URL/$RELEASE_ID?access_token=$TOKEN)
     else
@@ -298,7 +312,7 @@ echo ""
 for EXT in $ARCHIVE_FORMATS ; do
     ARCHIVENAME=$BASENAME$EXT
     FULLNAME="$TMP_DIR/$ARCHIVENAME"
-    echo "Creating $ARCHIVENAME ..."
+    notice "Creating $ARCHIVENAME ..."
     case $EXT in
     .tar.gz)
         tar c $BASENAME | gzip -9c > $ARCHIVENAME
@@ -313,14 +327,14 @@ for EXT in $ARCHIVE_FORMATS ; do
         MIMETYPE="application/zip"
         ;;
     *)
-        echo "WARNING: unsupported archive format $EXT"
+        warning "unsupported archive format $EXT"
         continue
         ;;
     esac
     if [ ! -f $FULLNAME ] ; then
         error "failed creating $FULLNAME"
     fi
-    echo "Uploading $ARCHIVENAME with mime type $MIMETYPE"
+    notice "Uploading $ARCHIVENAME with mime type $MIMETYPE"
     response=$(curl --fail -s -S -X POST $UPLOAD_URL/$RELEASE_ID/assets?name=$ARCHIVENAME \
         -H "Accept: application/vnd.github.v3+json" \
         -H "Authorization: token $TOKEN" \
@@ -333,7 +347,7 @@ done
 #
 # Update the website
 #
-echo "Updating website"
+notice "Updating website"
 cd
 if [ ! -d "$WEB_DIR" ] ; then
     git clone -b gh-pages https://github.com/$REPO "$WEB_DIR"
@@ -354,11 +368,11 @@ git add -A .
 git commit -m "Update website for version $VERSION"
 
 if [ x$PUSH = xyes ] ; then
-    echo "Pushing website changes"
+    notice "Pushing website changes"
     git push
-    echo "Done"
+    notice "Done"
 else
-    echo "To complete your release, run 'git push' in your gh-pages directory"
+    notice "To complete your release, run 'git push' in your gh-pages directory"
 fi
 
 exit 0
