@@ -166,6 +166,13 @@ if ! git show-ref -q $TAG ; then
 fi;
 notice "Using git tag $TAG"
 
+HEAD_REF=`git rev-parse --verify HEAD`
+TAG_REF=`git rev-parse --verify $TAG`
+
+if [ $TAG_REF != $HEAD_REF ] ; then
+    error "tag $TAG is not currently checked out"
+fi
+
 ######################################################################
 #
 # Determine the basename for the package archives
