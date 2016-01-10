@@ -238,6 +238,13 @@ if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
     error "uncommitted changes detected"
 fi
 
+# Make sure the tag is on the server
+# TODO: what about user's who prefer SSH over https for writing?
+# We could grep the output of "git remote" for "github.com/$REPO"
+# to determine the name of a suitable remote... Hmmm
+notice "Pushing your take to GitHub"
+git push https://github.com/$REPO $TAG
+
 
 ######################################################################
 #
