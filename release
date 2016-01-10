@@ -173,6 +173,10 @@ if [ $TAG_REF != $HEAD_REF ] ; then
     error "tag $TAG is not currently checked out"
 fi
 
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+    error "uncommitted changes detected"
+fi
+
 ######################################################################
 #
 # Determine the basename for the package archives
