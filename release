@@ -62,23 +62,15 @@ define() {
 }
 
 notice() {
-    printf "\033[32m"
-    echo $*
-    printf "\033[0m"
+    printf "\033[32m%s\033[0m\n" "$*"
 }
 
 warning() {
-    printf "\033[33m"
-    printf "WARNING: "
-    echo $*
-    printf "\033[0m"
+    printf "\033[33mWARNING: %s\033[0m\n" "$*"
 }
 
 error() {
-    printf "\033[31m"
-    printf "ERROR: "
-    echo $*
-    printf "\033[0m"
+    printf "\033[31mERROR: %s\033[0m\n" "$*"
     exit 1
 }
 
