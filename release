@@ -243,8 +243,11 @@ fi
 # We could grep the output of "git remote" for "github.com/$REPO"
 # to determine the name of a suitable remote... Hmmm
 notice "Pushing your take to GitHub"
-git push https://github.com/$REPO $TAG
-
+if [ x$FORCE = xyes ] ; then
+    git push --force https://github.com/$REPO $TAG
+else
+    git push https://github.com/$REPO $TAG
+fi
 
 ######################################################################
 #
