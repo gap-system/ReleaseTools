@@ -275,6 +275,19 @@ fi
 
 ######################################################################
 #
+# Validate PackageInfo.g
+#
+echo ""
+notice "Validating PackageInfo.g..."
+gap -A -q <<GAPInput
+if not ValidatePackageInfo("PackageInfo.g") then
+    QUIT_GAP(1);
+fi;
+GAPInput
+
+
+######################################################################
+#
 # Create the GitHub release
 #
 
