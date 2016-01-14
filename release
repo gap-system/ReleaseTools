@@ -392,6 +392,11 @@ rm -rf doc/
 mkdir -p doc/
 cp "$TMP_DIR/$BASENAME/doc"/*.{css,html,js,txt} doc/
 
+if [ -d ../htm ] ; then
+    rm -rf htm/
+    cp -r "$TMP_DIR/$BASENAME/htm/" .
+fi
+
 gap -A -b update.g
 
 git add -A .
