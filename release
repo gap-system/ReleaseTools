@@ -284,7 +284,7 @@ elif [ -e doc/make_doc ] ; then
     notice "Copying GAP package documentation for archives (using doc/make_doc)"
     cp "$SRC_DIR/doc"/* doc/
     cp -r "$SRC_DIR/htm/" .
-    rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,log,out,pnr,tex,toc,tst}
+    rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,log,out,pnr,toc,tst}
 fi
 
 ######################################################################
