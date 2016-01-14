@@ -396,12 +396,12 @@ git pull --ff-only
 
 cp "$TMP_DIR/$BASENAME/README"* .
 cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
-rm -rf doc/
-mkdir -p doc/
-cp "$TMP_DIR/$BASENAME/doc"/*.{css,html,js,txt} doc/
-
+rm -rf doc/ htm/
+if [ -e "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
+    mkdir -p doc/
+    cp "$TMP_DIR/$BASENAME/doc"/*.{css,html,js,txt} doc/
+fi
 if [ -d "$TMP_DIR/$BASENAME/htm/" ] ; then
-    rm -rf htm/
     cp -r "$TMP_DIR/$BASENAME/htm/" .
 fi
 
