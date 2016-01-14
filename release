@@ -399,7 +399,7 @@ rm -rf doc/
 mkdir -p doc/
 cp "$TMP_DIR/$BASENAME/doc"/*.{css,html,js,txt} doc/
 
-if [ -d ../htm ] ; then
+if [ -d "$TMP_DIR/$BASENAME/htm/" ] ; then
     rm -rf htm/
     cp -r "$TMP_DIR/$BASENAME/htm/" .
 fi
