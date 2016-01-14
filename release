@@ -241,7 +241,7 @@ fi
 # TODO: what about user's who prefer SSH over https for writing?
 # We could grep the output of "git remote" for "github.com/$REPO"
 # to determine the name of a suitable remote... Hmmm
-notice "Pushing your take to GitHub"
+notice "Pushing your tag to GitHub"
 if [ x$FORCE = xyes ] ; then
     git push --force https://github.com/$REPO $TAG
 else
