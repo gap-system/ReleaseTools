@@ -223,11 +223,14 @@ echo ""
 # when making the release commit).
 #
 if [ -e makedoc.g ] ; then
-    notice "Building GAP package documentation"
+    notice "Building GAP package documentation (using makedoc.g)"
     gap -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 Read("makedoc.g");
 GAPInput
+elif [ -e doc/make_doc ] ; then
+    notice "Building GAP package documentation (using doc/make_doc)"
+    cd doc && ./doc/make_doc && cd ..
 fi
 
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
@@ -271,12 +274,16 @@ if [ -x autogen.sh ] ; then
 fi
 
 if [ -e makedoc.g ] ; then
-    notice "Building GAP package documentation for archives"
+    notice "Building GAP package documentation for archives (using makedoc.g)"
     gap -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 Read("makedoc.g");
 GAPInput
     rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,lab,log,out,pnr,tex,toc,tst}
+elif [ -e doc/make_doc ] ; then
+    notice "Building GAP package documentation for archives (using doc/make_doc)"
+    cd doc && ./doc/make_doc && cd ..
+    rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,log,out,pnr,tex,toc,tst}
 fi
 
 ######################################################################
