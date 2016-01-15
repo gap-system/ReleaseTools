@@ -32,16 +32,22 @@ make a release.
 
 3. Adjust your `PackageInfo.g` file to use GitHub. This may require adjusting
    `PackageWWWHome`, `README_URL`, `PackageInfoURL`, `ArchiveURL`. An easy
-   way to do that is to use the following in your `PackageInfo.g`,
-   where you should replace `FOOBAR` with the name of your package.
+   way to do that is to use the following in your `PackageInfo.g`.
+   It assumes that your package name is equal to the repository name;
+   note that case matters.
 
     ```
-    PackageWWWHome := "http://gap-packages.github.io/FOOBAR/",
-    README_URL     := Concatenation(~.PackageWWWHome, "README"),
-    PackageInfoURL := Concatenation(~.PackageWWWHome, "PackageInfo.g"),
-    ArchiveURL     := Concatenation("https://github.com/gap-packages/FOOBAR/",
-                                    "releases/download/v", ~.Version,
-                                    "/FOOBAR-", ~.Version),
+    SourceRepository := rec(
+        Type := "git",
+        URL := Concatenation( "https://github.com/gap-packages/", ~.PackageName ),
+    ),
+    IssueTrackerURL := Concatenation( ~.SourceRepository.URL, "/issues" ),
+    PackageWWWHome  := Concatenation( "https://gap-packages.github.io/", ~.PackageName ),
+    README_URL      := Concatenation( ~.PackageWWWHome, "/README" ),
+    PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
+    ArchiveURL      := Concatenation( ~.SourceRepository.URL,
+                                     "/releases/download/v", ~.Version,
+                                     "/", ~.PackageName ,"-", ~.Version ),
     ```
 
 4. Make sure to also update your README, you package manual etc. to
@@ -58,6 +64,12 @@ make a release.
    AutoDoc("FOOBAR");
    QUIT;
    ```
+
+   As a fallback, we also looks for a `doc/make_doc` executable.
+   If found, we assume the package is not using GAPDoc, but rather
+   still uses a manual based on the `gapmacro` TeX macros. We then
+   execute the `make_doc` script from inside the `doc` directory,
+   and copy relevant files.
 
 
 ## The release process
@@ -214,6 +226,8 @@ The `release` script does multiple things for you:
    a. It removes any `.gitignore`, `.gitmodules` files.
    b. If a script `autogen.sh` is present, it is executed.
    c. If a file `makedoc.g` is present, it is executed.
+      Various files like `doc/*.aux` are removed afterwards.
+   d. Otherwise, if a file `doc/make_doc` is present, it is executed.
       Various files like `doc/*.aux` are removed afterwards.
 
 
