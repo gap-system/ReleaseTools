@@ -160,9 +160,11 @@ if [ "$TAG" != "$GAP_TAG" ] ; then
     error "given tag $TAG does not match tag $GAP_TAG found in PackageInfo.g"
 fi
 if ! git show-ref -q $TAG ; then
-    error "tag $TAG does not exist"
+    notice "Creating git tag $TAG"
+    git tag $TAG
+else
+    notice "Using git tag $TAG"
 fi;
-notice "Using git tag $TAG"
 
 HEAD_REF=`git rev-parse --verify HEAD`
 TAG_REF=`git rev-parse --verify $TAG`
