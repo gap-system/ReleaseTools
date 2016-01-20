@@ -410,7 +410,7 @@ fi
 gap -A -b update.g
 
 git add -A .
-git commit -m "Update website for version $VERSION"
+git commit -m "Update website for $PKG $VERSION"
 
 if [ x$PUSH = xyes ] ; then
     notice "Pushing website changes"
