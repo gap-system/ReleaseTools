@@ -99,6 +99,8 @@ FORCE=no
 while true; do
   case "$1" in
     -h | --help ) help ;;
+    --webdir ) WEB_DIR="$2"; shift 2 ;;
+    --tmpdir ) TMP_DIR="$2"; shift 2 ;;
     #-v | --version ) VERSION="$2"; shift 2 ;;
     #-r | --repository ) REPO="$2"; shift 2 ;;
     -t | --tag ) TAG="$2"; shift 2 ;;
