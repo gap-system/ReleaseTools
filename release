@@ -247,9 +247,9 @@ fi
 # to determine the name of a suitable remote... Hmmm
 notice "Pushing your tag to GitHub"
 if [ x$FORCE = xyes ] ; then
-    git push --force https://github.com/$REPO $TAG
+    git push --force git@github.com:$REPO $TAG
 else
-    git push https://github.com/$REPO $TAG
+    git push git@github.com:$REPO $TAG
 fi
 
 ######################################################################
@@ -392,7 +392,7 @@ done
 notice "Updating website"
 cd
 if [ ! -d "$WEB_DIR" ] ; then
-    git clone -b gh-pages https://github.com/$REPO "$WEB_DIR"
+    git clone -b gh-pages git@github.com:$REPO "$WEB_DIR"
 fi
 
 cd "$WEB_DIR"
