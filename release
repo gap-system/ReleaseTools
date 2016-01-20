@@ -262,7 +262,7 @@ mkdir -p "$TMP_DIR"
 rm -rf "$TMP_DIR"/$BASENAME*
 
 notice "Exporting repository content for tag '$TAG'"
-git archive --prefix=$BASENAME/ $TAG | tar xf - -C "$TMP_DIR/"
+git archive --prefix=$BASENAME/ $TAG . | tar xf - -C "$TMP_DIR/"
 
 
 # Build the package documentation, run autoconf, etc.
