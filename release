@@ -315,7 +315,7 @@ echo ""
 notice "Validating PackageInfo.g..."
 gap -A -q <<GAPInput
 if not ValidatePackageInfo("PackageInfo.g") then
-    QUIT_GAP(1);
+    FORCE_QUIT_GAP(1);
 fi;
 GAPInput
 
