@@ -74,6 +74,20 @@ error() {
     exit 1
 }
 
+eval_gap() {
+  # Invoke GAP. The final sed is a workaround for people whose
+  # gap script is broken does not honor -A. I am looking at you, Sebastian!
+  output=$( \
+    (echo 'OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;' ; cat - ; echo ; echo "FORCE_QUIT_GAP(0);") \
+    | gap -A -q -b 2>&1 \
+    | sed -e "s|\r||" )
+  echo "$output" > "$TMP_DIR/gap-error.log"
+  if echo "$output" | fgrep -q "FATAL ERROR" ; then
+    error "There was an error running GAP, see $TMP_DIR/gap-error.log"
+  fi
+  eval "$output"
+}
+
 if [ ! -f PackageInfo.g ] ; then
     error "unable to read PackageInfo.g file, use --help for instructions"
 fi
@@ -122,7 +136,7 @@ done
 # Determine package name and version, and other meta data
 #
 notice "Extracting information from PackageInfo.g..."
-eval $(gap -A -q -b <<EOF
+eval_gap <<EOF
 Read("PackageInfo.g");
 Print("PKG=\"",GAPInfo.PackageInfoCurrent.PackageName,"\"\n");
 Print("VERSION=\"",GAPInfo.PackageInfoCurrent.Version,"\"\n");
@@ -136,9 +150,7 @@ if Length(tmp) = 9 and tmp{[1,2,3,6,7]} = ["https:","","github.com","releases","
         Print("BASENAME=\"",tmp[9]{[1..len]},"\"\n");
     fi;
 fi;
-QUIT;
 EOF
-)
 
 notice "Package $PKG $VERSION"
 
