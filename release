@@ -34,6 +34,11 @@ Actions
   -h,  --help                      display this help text and exit
   -p,  --push                      also peform the final push, completing the release
 
+Paths
+  --srcdir <path>                  directory containing `PackageInfo.g` [Default: current directory]
+  --tmpdir <path>                  path to the source directory [Default: `tmp` subdirectory of src]
+  --webdir <path>                  path to the web directory [Default: `gh-pages` subdirectory of src]
+
 Custom settings
   -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]
   -r,  --repository <repository>   set GitHub repository (as `USERNAME/PKGNAME`)
@@ -102,7 +107,6 @@ fi
 #
 SRC_DIR="$PWD"
 TMP_DIR="$PWD/tmp/"
-WEB_DIR="$SRC_DIR/gh-pages"
 
 # undocumented feature: instead of using "--token <foo>",
 # one can also set the environment variable TOKEN=foo
@@ -113,6 +117,7 @@ FORCE=no
 while true; do
   case "$1" in
     -h | --help ) help ;;
+    --srcdir ) SRC_DIR="$2"; shift 2 ;;
     --webdir ) WEB_DIR="$2"; shift 2 ;;
     --tmpdir ) TMP_DIR="$2"; shift 2 ;;
     #-v | --version ) VERSION="$2"; shift 2 ;;
@@ -130,6 +135,10 @@ while true; do
     * ) break ;;
   esac
 done
+
+if [ x$WEB_DIR = x ] ; then
+    WEB_DIR="$SRC_DIR/gh-pages"
+fi
 
 ######################################################################
 #
