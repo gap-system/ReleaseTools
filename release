@@ -140,7 +140,11 @@ eval_gap <<EOF
 Read("PackageInfo.g");
 Print("PKG=\"",GAPInfo.PackageInfoCurrent.PackageName,"\"\n");
 Print("VERSION=\"",GAPInfo.PackageInfoCurrent.Version,"\"\n");
-Print("ARCHIVE_FORMATS=\"",GAPInfo.PackageInfoCurrent.ArchiveFormats,"\"\n");
+# extract archive formats; these can be comma or space separated, we want
+# to output them space separated
+tmp := GAPInfo.PackageInfoCurrent.ArchiveFormats;;
+tmp := JoinStringsWithSeparator(SplitString(tmp, ", "), " ");;
+Print("ARCHIVE_FORMATS=\"",tmp,"\"\n");
 tmp := SplitString(GAPInfo.PackageInfoCurrent.ArchiveURL, "/");;
 if Length(tmp) = 9 and tmp{[1,2,3,6,7]} = ["https:","","github.com","releases","download"] then
     Print("REPO=\"",Concatenation(tmp[4],"/",tmp[5]),"\"\n");
