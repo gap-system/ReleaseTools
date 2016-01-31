@@ -105,6 +105,7 @@ fi
 #
 # Command line processing
 #
+BASE_DIR="$PWD"     # remember base dir, to allow user to specify relative webdir
 SRC_DIR="$PWD"
 TMP_DIR="$PWD/tmp/"
 
@@ -415,7 +416,7 @@ done
 # Update the website
 #
 notice "Updating website"
-cd
+cd "$BASE_DIR"
 if [ ! -d "$WEB_DIR" ] ; then
     git clone -b gh-pages git@github.com:$REPO "$WEB_DIR"
 fi
