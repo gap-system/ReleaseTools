@@ -114,6 +114,7 @@ repository.
     ```
     git tag v1.2.3
     git push
+    git push v1.2.3
     ```
 
    Note: By default, ReleaseTools assume tag names of the form `vVERSION`.
