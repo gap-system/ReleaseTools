@@ -107,7 +107,7 @@ fi
 #
 BASE_DIR="$PWD"     # remember base dir, to allow user to specify relative webdir
 SRC_DIR="$PWD"
-TMP_DIR="$PWD/tmp/"
+TMP_DIR="$PWD/tmp"
 
 # undocumented feature: instead of using "--token <foo>",
 # one can also set the environment variable TOKEN=foo
@@ -288,7 +288,7 @@ mkdir -p "$TMP_DIR"
 rm -rf "$TMP_DIR"/$BASENAME*
 
 notice "Exporting repository content for tag '$TAG'"
-git archive --prefix=$BASENAME/ $TAG . | tar xf - -C "$TMP_DIR/"
+git archive --prefix=$BASENAME/ $TAG . | tar xf - -C "$TMP_DIR"
 
 
 # Build the package documentation, run autoconf, etc.
