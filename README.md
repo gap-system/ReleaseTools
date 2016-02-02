@@ -129,7 +129,7 @@ repository.
 
 9. Verify that everything went fine by visiting
    https://github.com/USER/FOOBAR/releases/tag/v1.2.3 and
-   https://USER.github.com/FOOBAR
+   https://USER.github.io/FOOBAR
 
    In particular, test the release archives created by the previous step. If you are unhappy
    with the outcome, or for some other reason decide that you need
@@ -148,10 +148,10 @@ repository.
 
 
 That's it. You should now be able to see the new version on
-  https://USER.github.com/FOOBAR
+  https://USER.github.io/FOOBAR
 and also be able to view the manual there, download the new version
 etc. Moreover
-  https://USER.github.com/FOOBAR/PackageInfo.g
+  https://USER.github.io/FOOBAR/PackageInfo.g
 should be up-to-date. So if the GAP server already has this registered
 as location of your `PackageInfo.g`, it should now automatically
 detect that you made a release, and pull it into the next
