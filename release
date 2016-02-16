@@ -46,9 +46,8 @@ Custom settings
   -f, --force                      if a release with the same name already exists: overwrite it
 
 Notes:
-* The package name and version and the list of archive formats
-  are byextracted from PackageInfo.g.
-* The repository name is extracted from TODO
+* The package name and version, the list of archive formats, and the GitHub repository
+  are extracted from PackageInfo.g.
 * To learn how to create a GitHub access token, please consult
   https://help.github.com/articles/creating-an-access-token-for-command-line-use/
 * Without the --push option, all steps are performed, except for the final push
@@ -171,9 +170,7 @@ notice "Package $PKG $VERSION"
 
 ######################################################################
 #
-# Determine the tag
-# TODO: verify TAG is valid? also verify that it refers
-# to the currently checked out revision?
+# Determine the tag, and validate it
 #
 if [ x"$TAG" = "x" ] ; then
     if [ x"$GAP_TAG" = "x" ] ; then
@@ -229,7 +226,7 @@ UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
 ######################################################################
 #
 # Fetch GitHub oauth token, used to authenticate the following commands.
-# See https://TODO.github.documentation
+# See https://help.github.com/articles/git-automation-with-oauth-tokens/
 #
 if [ x$TOKEN = x ] ; then
     TOKEN=`git config --get github.token || echo`
@@ -268,7 +265,8 @@ if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
 fi
 
 # Make sure the tag is on the server
-# TODO: what about user's who prefer SSH over https for writing?
+#
+# TODO: what about user's who prefer HTTPS instead of SSH for push?
 # We could grep the output of "git remote" for "github.com/$REPO"
 # to determine the name of a suitable remote... Hmmm
 notice "Pushing your tag to GitHub"
