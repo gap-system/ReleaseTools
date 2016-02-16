@@ -172,6 +172,10 @@ notice "Package $PKG $VERSION"
 #
 # Determine the tag, and validate it
 #
+if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+    error "uncommitted changes detected"
+fi
+
 if [ x"$TAG" = "x" ] ; then
     if [ x"$GAP_TAG" = "x" ] ; then
         TAG=v$VERSION
@@ -194,10 +198,6 @@ TAG_REF=`git rev-parse --verify $TAG`
 
 if [ $TAG_REF != $HEAD_REF ] ; then
     error "tag $TAG is not the HEAD commit -- did you tag the right commit?"
-fi
-
-if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
-    error "uncommitted changes detected"
 fi
 
 ######################################################################
