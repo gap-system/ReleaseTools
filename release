@@ -347,7 +347,7 @@ if ! echo "${response}" | fgrep -q "Not Found" ; then
     if [ x$FORCE = xyes ] ; then
         notice "Deleting existing release $TAG from GitHub"
         RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
-        response=$(curl -s -S -X DELETE $API_URL/$RELEASE_ID?access_token=$TOKEN)
+        response=$(curl --fail -s -S -X DELETE $API_URL/$RELEASE_ID?access_token=$TOKEN)
     else
         error "release $TAG already exists on GitHub, aborting (use --force to override this)"
     fi
@@ -363,7 +363,7 @@ define DATA <<EOF
   "prerelease": false
 }
 EOF
-response=$(curl -s -S -H "Content-Type: application/json" \
+response=$(curl --fail -s -S -H "Content-Type: application/json" \
     -X POST --data "$DATA" $API_URL?access_token=$TOKEN)
 
 RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
