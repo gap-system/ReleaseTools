@@ -87,7 +87,7 @@ eval_gap() {
     | sed -e "s|\r||" )
   mkdir -p "$TMP_DIR"
   echo "$output" > "$TMP_DIR/gap-error.log"
-  if echo "$output" | fgrep -q "FATAL ERROR" ; then
+  if echo "$output" | grep -q "\(FATAL ERROR\|Syntax \)" ; then
     error "There was an error running GAP, see $TMP_DIR/gap-error.log"
   fi
   eval "$output"
