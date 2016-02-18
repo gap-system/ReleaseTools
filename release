@@ -85,6 +85,7 @@ eval_gap() {
     (echo 'OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;' ; cat - ; echo ; echo "FORCE_QUIT_GAP(0);") \
     | gap -A -q -b 2>&1 \
     | sed -e "s|\r||" )
+  mkdir -p "$TMP_DIR"
   echo "$output" > "$TMP_DIR/gap-error.log"
   if echo "$output" | fgrep -q "FATAL ERROR" ; then
     error "There was an error running GAP, see $TMP_DIR/gap-error.log"
