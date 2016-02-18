@@ -163,10 +163,17 @@ if Length(tmp) = 9 and tmp{[1,2,3,6,7]} = ["https:","","github.com","releases","
     if len > 0 then
         Print("BASENAME=\"",tmp[9]{[1..len]},"\"\n");
     fi;
+else
+    tmp := GAPInfo.PackageInfoCurrent.ArchiveURL;
+    Print("GAP_ERROR=\"The ArchiveURL has unexpected value '",tmp,"'\"\n");
 fi;
 EOF
 
 notice "Package $PKG $VERSION"
+
+if [ x"$GAP_ERROR" != "x" ] ; then
+    error "$GAP_ERROR"
+fi
 
 
 ######################################################################
