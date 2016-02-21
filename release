@@ -97,7 +97,7 @@ eval_gap() {
   # gap script is broken does not honor -A. I am looking at you, Sebastian!
   output=$( \
     (echo 'OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;' ; cat - ; echo ; echo "FORCE_QUIT_GAP(0);") \
-    | gap -A -q -b 2>&1 \
+    | $GAP -A -q -b 2>&1 \
     | sed -e "s|\r||" )
   mkdir -p "$TMP_DIR"
   echo "$output" > "$TMP_DIR/gap-error.log"
@@ -157,6 +157,14 @@ if [ x$WEB_DIR = x ] ; then
 fi
 if [ ! -d "$WEB_DIR" ] ; then
     error "Could not find 'webdir' with clone of your gh-pages branch"
+fi
+
+# Check whether GAP is usable
+if [ x$GAP = x ] ; then
+    GAP="gap"
+fi
+if ! command -v $GAP >/dev/null 2>&1 ; then
+    error "could not find GAP, please consult the README"
 fi
 
 
@@ -278,7 +286,7 @@ echo ""
 #
 if [ -e makedoc.g ] ; then
     notice "Building GAP package documentation (using makedoc.g)"
-    gap -A -q <<GAPInput
+    $GAP -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 Read("makedoc.g");
 GAPInput
@@ -326,7 +334,7 @@ fi
 
 if [ -e makedoc.g ] ; then
     notice "Building GAP package documentation for archives (using makedoc.g)"
-    gap -A -q <<GAPInput
+    $GAP -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 Read("makedoc.g");
 GAPInput
@@ -344,7 +352,7 @@ fi
 #
 echo ""
 notice "Validating PackageInfo.g..."
-gap -A -q <<GAPInput
+$GAP -A -q <<GAPInput
 if not ValidatePackageInfo("PackageInfo.g") then
     FORCE_QUIT_GAP(1);
 fi;
@@ -452,7 +460,7 @@ if [ -d "$TMP_DIR/$BASENAME/htm/" ] ; then
     cp -r "$TMP_DIR/$BASENAME/htm/" .
 fi
 
-gap -A -b update.g
+$GAP -A -b update.g
 
 git add -A .
 git commit -m "Update website for $PKG $VERSION"
