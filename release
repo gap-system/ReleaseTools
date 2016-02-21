@@ -107,14 +107,6 @@ eval_gap() {
   eval "$output"
 }
 
-if [ ! -f PackageInfo.g ] ; then
-    error "unable to read PackageInfo.g file, use --help for instructions"
-fi
-
-if ! command -v curl >/dev/null 2>&1 ; then
-    error "the 'curl' command was not found, please install it"
-fi
-
 ######################################################################
 #
 # Command line processing
@@ -146,15 +138,23 @@ while true; do
 done
 
 
-
 ######################################################################
 #
-# Check for webdir presence
+# Some initial sanity checks
 #
+
+if [ ! -f PackageInfo.g ] ; then
+    error "unable to read PackageInfo.g file, use --help for instructions"
+fi
+
+if ! command -v curl >/dev/null 2>&1 ; then
+    error "the 'curl' command was not found, please install it"
+fi
+
+# Check for webdir presence
 if [ x$WEB_DIR = x ] ; then
     WEB_DIR="$SRC_DIR/gh-pages"
 fi
-
 if [ ! -d "$WEB_DIR" ] ; then
     error "Could not find 'webdir' with clone of your gh-pages branch"
 fi
