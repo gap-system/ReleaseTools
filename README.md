@@ -247,13 +247,44 @@ The `release` script does multiple things for you:
 ## GitHub access token
 
 The `release` script needs limited write access to your repository in
-order to upload the release archives for you. For this, you need to
-generate a so-called GitHub access token. To generate one, please follow
-the instructions on
- https://help.github.com/articles/creating-an-access-token-for-command-line-use
+order to upload the release archives for you. In order to do this,
+the scripts needs to authenticate itself with GitHub, for which it needs
+a so-called GitHub access token. To generate one, please follow
+the instructions at
+<https://help.github.com/articles/creating-an-access-token-for-command-line-use>.
 
 When creating the token, you will have to select which "scopes" it is for.
 The only scope needed by the `release` scrips it the `repo` scope.
+
+There are multiple ways to tell the `release` script what your token is. In
+order of their precedence (from highest to lowest), these are:
+
+1. Use the `--token` command line option. E.g.
+    ```
+    ./release --token VALUE ...
+    ```
+
+2. Set the environment variable `TOKEN` to the token value.
+   This is mainly useful in scripts. E.g.
+    ```
+    TOKEN=VALUE
+    ./release ...
+    ```
+
+3. Add the token to your git config, by setting `github.token`. As usual with
+   git config entries, you can set this globally in your `~/.gitconfig` or
+   locally for each clone (which can be handy if you need different tokens for
+   different projects). You can set the token via the following commands:
+    ```
+    git config github.token VALUE           # for the current project
+    git config --global github.token VALUE  # globally
+    ```
+   For details, please refer to `git help config`.
+
+4. Create a file `~/.github_shell_token` containing your token and nothing else.
+   If you do this, make sure this file is not readable by other users, i.e.
+   run `chmod 0600 ~/.github_shell_token`
+
 
 
 ## Packages using the ReleaseTools
@@ -278,7 +309,6 @@ include the following:
 - talk about https://github.com/fingolfin/GitHubPagesForGAP
 - update https://github.com/fingolfin/PackageMaker to (optionally?)
   set up everything for this process
-- explain which access "scope" the GitHub access token needs
 - ...
 
 
