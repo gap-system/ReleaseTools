@@ -20,6 +20,10 @@
 #
 
 
+######################################################################
+#
+# Usage information
+#
 help() {
 cat <<EOF
 Usage: $0 [OPTIONS]
@@ -53,31 +57,41 @@ Notes:
 * Without the --push option, all steps are performed, except for the final push
   of the gh-pages changes. These changes are what make the release visible
   to the GAP package distribution system.
-  Please consult the README for an explanation.
+* Please consult the README for more information.
 EOF
     exit 0
 }
 
-# Little helper for defining variables from heredoc
-# This use the bash extension '-d' to the read command,
-# also supported by zsh. If this is an issue 
+######################################################################
+#
+# Various little helper functions
+
+
+# Define variables from heredoc. This use the bash extension '-d' to the read
+# command, also supported by zsh. If this is an issue for you, file an issue,
+# and we can try to make it more portable.
 define() {
     IFS='\n' read -r -d '' $1 || true
 }
 
+# print notices in green
 notice() {
     printf "\033[32m%s\033[0m\n" "$*"
 }
 
+# print notices in yellow
 warning() {
     printf "\033[33mWARNING: %s\033[0m\n" "$*"
 }
 
+# print error in red and exit
 error() {
     printf "\033[31mERROR: %s\033[0m\n" "$*"
     exit 1
 }
 
+# execute GAP commands from a heredoc, and evaluate the result,
+# unless GAP reported any errors
 eval_gap() {
   # Invoke GAP. The final sed is a workaround for people whose
   # gap script is broken does not honor -A. I am looking at you, Sebastian!
@@ -109,10 +123,6 @@ BASE_DIR="$PWD"     # remember base dir, to allow user to specify relative webdi
 SRC_DIR="$PWD"
 TMP_DIR="$PWD/tmp"
 
-# undocumented feature: instead of using "--token <foo>",
-# one can also set the environment variable TOKEN=foo
-# and similar for REPO, TAG
-
 PUSH=no
 FORCE=no
 while true; do
@@ -121,8 +131,6 @@ while true; do
     --srcdir ) SRC_DIR="$2"; shift 2 ;;
     --webdir ) WEB_DIR="$2"; shift 2 ;;
     --tmpdir ) TMP_DIR="$2"; shift 2 ;;
-    #-v | --version ) VERSION="$2"; shift 2 ;;
-    #-r | --repository ) REPO="$2"; shift 2 ;;
     -t | --tag ) TAG="$2"; shift 2 ;;
     -r | --repository ) REPO="$2"; shift 2 ;;
     --token ) TOKEN="$2"; shift 2 ;;
@@ -284,10 +292,6 @@ if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
 fi
 
 # Make sure the tag is on the server
-#
-# TODO: what about user's who prefer HTTPS instead of SSH for push?
-# We could grep the output of "git remote" for "github.com/$REPO"
-# to determine the name of a suitable remote... Hmmm
 notice "Pushing your tag to GitHub"
 if [ x$FORCE = xyes ] ; then
     git push --force $TAG
