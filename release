@@ -290,9 +290,9 @@ fi
 # to determine the name of a suitable remote... Hmmm
 notice "Pushing your tag to GitHub"
 if [ x$FORCE = xyes ] ; then
-    git push --force git@github.com:$REPO $TAG
+    git push --force $TAG
 else
-    git push git@github.com:$REPO $TAG
+    git push $TAG
 fi
 
 ######################################################################
