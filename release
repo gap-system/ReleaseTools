@@ -243,7 +243,7 @@ if [ x$TOKEN = x -a -r ~/.github_shell_token ] ; then
     TOKEN=`cat ~/.github_shell_token`
 fi
 if [ x$TOKEN = x ] ; then
-    error "could not determine GitHub access token"
+    error "could not determine GitHub access token, please use the --token option"
 fi
 
 
