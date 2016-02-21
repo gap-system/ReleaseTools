@@ -148,7 +148,7 @@ if [ x$WEB_DIR = x ] ; then
 fi
 
 if [ ! -d "$WEB_DIR" ] ; then
-    error "Could not find `webdir` with clone of your gh-pages branch"
+    error "Could not find 'webdir' with clone of your gh-pages branch"
 fi
 
 
