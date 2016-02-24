@@ -19,6 +19,7 @@ as well as GitHub pages for the package homepage.
 
 
 ## Initial setup
+
 The following steps should be performed once on your package repository.
 After that, you can follow the instructions in the next section to
 make a release.
@@ -50,8 +51,7 @@ make a release.
                                      "/", ~.PackageName ,"-", ~.Version ),
     ```
 
-4. Make sure to also update your README, you package manual etc. to
-   use the correct URLs.
+4. Update your README, you package manual etc. to use the correct URLs.
 
 5. Optionally: Provide a `makedoc.g` which regenerates your package manual.
    If you are using GAPDoc, often the AutoDoc package provides an easy way
@@ -78,6 +78,11 @@ Suppose we want to release version 1.2.3 of a package named `FOOBAR`.
 Suppose furthermore that directory `foo` contains a clone of the
 repository.
 
+In order to make a release, you can follow the steps below. Note that this
+assumes that `gap` is in your PATH, i.e. it can be invoked by just entering
+`gap`. Alternatively, before running the `release` tool you can set the `GAP`
+environment variable to contain the full path to your GAP executable
+
 1. Make sure we are on the right branch and have the latest version.
 
     ```
@@ -86,6 +91,12 @@ repository.
 
    You should also verify that there are no uncommitted local changes,
    and if there are, either commit them or remove them.
+
+2. Make sure there is a `gh-pages` subdirectory which contains an up-to-date checkout
+   of the `gh-pages` branch of your repository.
+   
+   Power users with a recent git version (2.7.0 or later) can also
+   use `git worktree` to create the `gh-pages` subdirectory.
 
 3. Update the version and release date in `PackageInfo.g`.
 
@@ -116,8 +127,10 @@ repository.
     git push
     ```
 
-   Note: By default, ReleaseTools assume tag names of the form `vVERSION`.
-   You can override this, if you want, but we recommend using the default.
+   Note: By default, `release` attempts to guess the correct tag name by
+   inspecting the `ArchiveURL` in your `PackageInfo.g`; if that fails, it uses
+   a tag name of the form `vVERSION`. You can override this, if you really
+   want, but we strongly recommend using the default for simplicity.
 
 8. Create the release using the `release` script included here:
 
@@ -158,9 +171,9 @@ detect that you made a release, and pull it into the next
 GAP package bundle.
 
 
-### The release script
+### The `release` script
 
-This tool helps you create release archives of your GAP package in a clean
+The `release` script helps you create release archives of your GAP package in a clean
 and controlled way, and publish them on GitHub.
 
 Again, we assume you are working on version 1.2.3 or package `FOOBAR`.

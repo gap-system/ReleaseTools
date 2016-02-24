@@ -98,7 +98,7 @@ eval_gap() {
   output=$( \
     (echo 'OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;' ; cat - ; echo ; echo "FORCE_QUIT_GAP(0);") \
     | $GAP -A -q -b 2>&1 \
-    | sed -e "s|\r||" )
+    | tr -d '\r' )
   mkdir -p "$TMP_DIR"
   echo "$output" > "$TMP_DIR/gap-error.log"
   if echo "$output" | grep -q "\(FATAL ERROR\|Syntax \)" ; then
