@@ -120,16 +120,18 @@ FORCE=no
 while true; do
   case "$1" in
     -h | --help ) help ;;
+
     --srcdir ) SRC_DIR="$2"; shift 2 ;;
     --webdir ) WEB_DIR="$2"; shift 2 ;;
     --tmpdir ) TMP_DIR="$2"; shift 2 ;;
+
     -t | --tag ) TAG="$2"; shift 2 ;;
     -r | --repository ) REPO="$2"; shift 2 ;;
     --token ) TOKEN="$2"; shift 2 ;;
+
     -p | --push ) PUSH=yes; shift ;;
     --no-push ) PUSH=no; shift ;;
-    --upload ) UPLOAD=yes; shift ;;
-    --no-upload ) UPLOAD=no; shift ;;
+
     -f | --force ) FORCE=yes; shift ;;
     --no-force ) FORCE=no; shift ;;
     -- ) shift; break ;;
