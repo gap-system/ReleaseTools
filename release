@@ -117,6 +117,7 @@ TMP_DIR="$PWD/tmp"
 
 PUSH=no
 FORCE=no
+REMOTE=origin
 while true; do
   case "$1" in
     -h | --help ) help ;;
@@ -128,6 +129,8 @@ while true; do
     -t | --tag ) TAG="$2"; shift 2 ;;
     -r | --repository ) REPO="$2"; shift 2 ;;
     --token ) TOKEN="$2"; shift 2 ;;
+
+    --remote ) REMOTE="$2"; shift 2 ;;
 
     -p | --push ) PUSH=yes; shift ;;
     --no-push ) PUSH=no; shift ;;
@@ -304,9 +307,9 @@ fi
 # Make sure the tag is on the server
 notice "Pushing your tag to GitHub"
 if [ x$FORCE = xyes ] ; then
-    git push --force $TAG
+    git push --force $REMOTE $TAG
 else
-    git push $TAG
+    git push $REMOTE $TAG
 fi
 
 ######################################################################
