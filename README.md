@@ -190,18 +190,29 @@ PATH/TO/ReleaseTools/release
 This scans your `PackageInfo.g` for the package name and version, and
 uses that to guess the release tag.
 
-By default, the script assumes that you tagged your release with a tag named
-`vVERSION` (so `v1.2.3` in our example). If you prefer to use other
-tag names, you can specify this as parameter, e.g.
+* `-t`, `--tag`: By default, the script assumes that you tagged your release
+  with a tag named `vVERSION` (so `v1.2.3` in our example). If you prefer to
+  use other tag names, you can specify this as parameter, e.g.
 
-```
-PATH/TO/ReleaseTools/release --tag VER-1-2-3
-```
+   ```
+   PATH/TO/ReleaseTools/release --tag VER-1-2-3
+   ```
 
-Note that the `release` tool will attempt to verify your tag by checking
-it against the `ArchiveURL` in your `PackageInfo.g`.
+   Note that the `release` tool will attempt to verify your tag by checking
+   it against the `ArchiveURL` in your `PackageInfo.g`.
 
-TODO: describe other options
+* `--token`: Set the GitHub token to use. For details, refer to section "GitHub access token"
+  in this README.
+
+* `-r`, `--repository`: TODO
+
+* `-p`, `--push`: TODO
+
+* `-f`, `--force`: TODO
+
+* `--srcdir`: TODO
+* `--webdir`: TODO
+* `--tmpdir`: TODO
 
 
 #### What it does
@@ -245,7 +256,7 @@ The `release` script does multiple things for you:
 
 
 2. It uploads the created files to GitHub for you.
-   
+
    TODO: Describe details
 
 
