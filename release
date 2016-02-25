@@ -298,6 +298,8 @@ GAPInput
 elif [ -e doc/make_doc ] ; then
     notice "Building GAP package documentation (using doc/make_doc)"
     cd doc && ./make_doc && cd ..
+else
+    warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
 fi
 
 if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
