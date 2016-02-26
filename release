@@ -93,8 +93,10 @@ error() {
 # execute GAP commands from a heredoc, and evaluate the result,
 # unless GAP reported any errors
 eval_gap() {
-  # Invoke GAP. The final sed is a workaround for people whose
-  # gap script is broken does not honor -A. I am looking at you, Sebastian!
+  # Invoke GAP. The final call to 'tr' removes newlines and is a workaround
+  # for people whose gap script is broken (by not honoring -A, thus loading
+  # Browse, which inserts that extra character). I am looking at you,
+  # Sebastian!
   output=$( \
     (echo 'OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;' ; cat - ; echo ; echo "FORCE_QUIT_GAP(0);") \
     | $GAP -A -q -b 2>&1 \
