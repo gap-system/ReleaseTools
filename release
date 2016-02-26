@@ -365,7 +365,7 @@ fi
 #
 echo ""
 notice "Validating PackageInfo.g..."
-$GAP -A -q <<GAPInput
+$GAP -A -q <<GAPInput || error "validation failed"
 if not ValidatePackageInfo("PackageInfo.g") then
     FORCE_QUIT_GAP(1);
 fi;
