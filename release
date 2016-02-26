@@ -37,6 +37,7 @@ from the PackageInfo.g file, and performs the releases process.
 Actions
   -h,  --help                      display this help text and exit
   -p,  --push                      also peform the final push, completing the release
+  -f, --force                      if a release with the same name already exists: overwrite it
 
 Paths
   --srcdir <path>                  directory containing `PackageInfo.g` [Default: current directory]
@@ -47,7 +48,7 @@ Custom settings
   -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]
   -r,  --repository <repository>   set GitHub repository (as `USERNAME/PKGNAME`)
   --token <oauth>                  GitHub access token
-  -f, --force                      if a release with the same name already exists: overwrite it
+  --remote <remote>                git remote to which tags are pushed [Default: origin]
 
 Notes:
 * The package name and version, the list of archive formats, and the GitHub repository
