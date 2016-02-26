@@ -216,7 +216,7 @@ fi
 #
 # Determine the tag, and validate it
 #
-if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+if ! git status --porcelain --untracked-files=no ; then
     error "uncommitted changes detected"
 fi
 
@@ -307,7 +307,7 @@ else
     warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
 fi
 
-if [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+if ! git status --porcelain --untracked-files=no ; then
     error "uncommitted changes detected"
 fi
 
