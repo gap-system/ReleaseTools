@@ -467,11 +467,12 @@ for EXT in $ARCHIVE_FORMATS ; do
         error "failed creating $FULLNAME"
     fi
     notice "Uploading $ARCHIVENAME with mime type $MIMETYPE"
-    response=$(curl --fail -s -S -X POST $UPLOAD_URL/$RELEASE_ID/assets?name=$ARCHIVENAME \
+    response=`curl --fail --progress-bar -o "$TMP_DIR/upload.log" \
+        -X POST $UPLOAD_URL/$RELEASE_ID/assets?name=$ARCHIVENAME \
         -H "Accept: application/vnd.github.v3+json" \
         -H "Authorization: token $TOKEN" \
         -H "Content-Type: $MIMETYPE" \
-        --data-binary @"$FULLNAME")
+        --data-binary @"$FULLNAME"`
 done
 
 
