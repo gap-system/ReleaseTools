@@ -129,28 +129,28 @@ TMP_DIR="$PWD/tmp"
 PUSH=no
 FORCE=no
 REMOTE=origin
-while true; do
-  case "$1" in
+while [ x"$1" != x ]; do
+  option="$1" ; shift
+  case "$option" in
     -h | --help ) help ;;
 
-    --srcdir ) SRC_DIR="$2"; shift 2 ;;
-    --webdir ) WEB_DIR="$2"; shift 2 ;;
-    --tmpdir ) TMP_DIR="$2"; shift 2 ;;
+    --srcdir ) SRC_DIR="$1"; shift ;;
+    --webdir ) WEB_DIR="$1"; shift ;;
+    --tmpdir ) TMP_DIR="$1"; shift ;;
 
-    -t | --tag ) TAG="$2"; shift 2 ;;
-    -r | --repository ) REPO="$2"; shift 2 ;;
-    --token ) TOKEN="$2"; shift 2 ;;
+    -t | --tag ) TAG="$1"; shift ;;
+    -r | --repository ) REPO="$1"; shift ;;
+    --token ) TOKEN="$1"; shift ;;
 
-    --remote ) REMOTE="$2"; shift 2 ;;
+    --remote ) REMOTE="$1"; shift ;;
 
-    -p | --push ) PUSH=yes; shift ;;
-    --no-push ) PUSH=no; shift ;;
+    -p | --push ) PUSH=yes ;;
+    --no-push ) PUSH=no ;;
 
-    -f | --force ) FORCE=yes; shift ;;
-    --no-force ) FORCE=no; shift ;;
-    -- ) shift; break ;;
-    "" ) break ;;
-    * ) error "unknown option '$1'" ;;
+    -f | --force ) FORCE=yes ;;
+    --no-force ) FORCE=no ;;
+    -- ) break ;;
+    * ) error "unknown option '$option'" ;;
   esac
 done
 
