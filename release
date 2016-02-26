@@ -301,14 +301,14 @@ echo ""
 # generate doc/title.xml from PackageInfo.g, it is easy to forget that
 # when making the release commit).
 #
-if [ -e makedoc.g ] ; then
+if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation (using makedoc.g)"
     $GAP -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
 PushOptions(rec(relativePath:=true));
 Read("makedoc.g");
 GAPInput
-elif [ -e doc/make_doc ] ; then
+elif [ -f doc/make_doc ] ; then
     notice "Building GAP package documentation (using doc/make_doc)"
     cd doc && ./make_doc && cd ..
 else
@@ -351,7 +351,7 @@ if [ -x autogen.sh ] ; then
     rm -rf autom4te.cache
 fi
 
-if [ -e makedoc.g ] ; then
+if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation for archives (using makedoc.g)"
     $GAP -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
@@ -359,7 +359,7 @@ PushOptions(rec(relativePath:=true));
 Read("makedoc.g");
 GAPInput
     rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,lab,log,out,pnr,tex,toc,tst}
-elif [ -e doc/make_doc ] ; then
+elif [ -f doc/make_doc ] ; then
     notice "Copying GAP package documentation for archives (using doc/make_doc)"
     cp "$SRC_DIR/doc"/* doc/
     cp -r "$SRC_DIR/htm/" .
@@ -482,7 +482,7 @@ git pull --ff-only
 cp "$TMP_DIR/$BASENAME/README"* .
 cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
 rm -rf doc/ htm/
-if [ -e "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
+if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
     mkdir -p doc/
     cp "$TMP_DIR/$BASENAME/doc"/*.{css,html,js,txt} doc/
 fi
