@@ -164,13 +164,11 @@ if [ ! -f PackageInfo.g ] ; then
     error "unable to read PackageInfo.g file, use --help for instructions"
 fi
 
-if ! command -v curl >/dev/null 2>&1 ; then
+command -v curl >/dev/null 2>&1 ||
     error "the 'curl' command was not found, please install it"
-fi
 
-if ! command -v python >/dev/null 2>&1 ; then
+command -v python >/dev/null 2>&1 ||
     error "the 'python' command was not found, please install it"
-fi
 
 # Check for webdir presence
 if [ x$WEB_DIR = x ] ; then
@@ -184,9 +182,8 @@ fi
 if [ x$GAP = x ] ; then
     GAP="gap"
 fi
-if ! command -v $GAP >/dev/null 2>&1 ; then
+command -v $GAP >/dev/null 2>&1 ||
     error "could not find GAP, please consult the README"
-fi
 
 
 ######################################################################
@@ -228,9 +225,8 @@ fi
 #
 # Determine the tag, and validate it
 #
-if ! git status --porcelain --untracked-files=no ; then
+git status --porcelain --untracked-files=no ||
     error "uncommitted changes detected"
-fi
 
 if [ x"$TAG" = "x" ] ; then
     if [ x"$GAP_TAG" = "x" ] ; then
@@ -242,11 +238,11 @@ fi
 if [ "$TAG" != "$GAP_TAG" ] ; then
     error "given tag $TAG does not match tag $GAP_TAG found in PackageInfo.g"
 fi
-if ! git show-ref -q $TAG ; then
+if git show-ref -q $TAG ; then
+    notice "Using git tag $TAG"
+else
     notice "Creating git tag $TAG"
     git tag $TAG
-else
-    notice "Using git tag $TAG"
 fi;
 
 HEAD_REF=`git rev-parse --verify HEAD`
@@ -319,9 +315,8 @@ else
     warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
 fi
 
-if ! git status --porcelain --untracked-files=no ; then
+git status --porcelain --untracked-files=no ||
     error "uncommitted changes detected"
-fi
 
 # Make sure the tag is on the server
 notice "Pushing your tag to GitHub"
