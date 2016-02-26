@@ -110,6 +110,14 @@ eval_gap() {
   eval "$output"
 }
 
+# helper function for parsing GitHub's JSON output. Right now,
+# we only extra the value of a single key at a time. This means
+# we may end up parsing the same JSON data two times, but that
+# doesn't really matter as it is tiny.
+json_get_key() {
+    echo "$response" | python -c 'import json,sys;obj=json.load(sys.stdin);print obj.get("'$1'","")'
+}
+
 ######################################################################
 #
 # Command line processing
@@ -158,6 +166,10 @@ fi
 
 if ! command -v curl >/dev/null 2>&1 ; then
     error "the 'curl' command was not found, please install it"
+fi
+
+if ! command -v python >/dev/null 2>&1 ; then
+    error "the 'python' command was not found, please install it"
 fi
 
 # Check for webdir presence
@@ -377,23 +389,26 @@ GAPInput
 # Create the GitHub release
 #
 
-# crude helper function for "parsing" enough JSON so that we can understand
-# what's going on.
-jsonval() {
-    temp=`echo $response | sed 's/\\\\\//\//g' | sed 's/[{}]//g' | awk -v k="text" '{n=split($0,a,","); for (i=1; i<=n; i++) print a[i]}' | sed 's/\"\:\"/\|/g' | sed 's/[\,]/ /g' | sed 's/\"//g' | grep -w id`
-    echo ${temp##*|}
-}
-
 # check if release already exists
-response=$(curl -s -S -X GET $API_URL/tags/$TAG?access_token=$TOKEN)
-if ! echo "${response}" | fgrep -q "Not Found" ; then
+response=`curl -s -S -X GET $API_URL/tags/$TAG?access_token=$TOKEN`
+MESSAGE=`json_get_key message`
+RELEASE_ID=`json_get_key id`
+
+if [ "$MESSAGE" = "Not Found" ] ; then
+    MESSAGE=  # release does not yet exist -> that's how we like it
+elif [ x"$RELEASE_ID" != x ] ; then
+    # release already exists -> error out or delete it
     if [ x$FORCE = xyes ] ; then
         notice "Deleting existing release $TAG from GitHub"
-        RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
-        response=$(curl --fail -s -S -X DELETE $API_URL/$RELEASE_ID?access_token=$TOKEN)
+        response=`curl --fail -s -S -X DELETE $API_URL/$RELEASE_ID?access_token=$TOKEN`
+        MESSAGE=
     else
         error "release $TAG already exists on GitHub, aborting (use --force to override this)"
     fi
+fi
+
+if [ x"$MESSAGE" != x ] ; then
+    error "accessing GitHub failed: $MESSAGE"
 fi
 
 # Create the release by sending suitable JSON
@@ -406,12 +421,18 @@ define DATA <<EOF
   "prerelease": false
 }
 EOF
-response=$(curl --fail -s -S -H "Content-Type: application/json" \
-    -X POST --data "$DATA" $API_URL?access_token=$TOKEN)
+notice "Creating new release $TAG on GitHub"
+response=`curl -s -S -H "Content-Type: application/json" \
+ -X POST --data "$DATA" $API_URL?access_token=$TOKEN`
 
-RELEASE_ID=$(jsonval | sed "s/id:/\n/g" | sed -n 2p | sed "s| ||g")
-
-# TODO: error handling?
+MESSAGE=`json_get_key message`
+if [ x"$MESSAGE" != x ] ; then
+    error "creating release on GitHub failed: $MESSAGE"
+fi
+RELEASE_ID=`json_get_key id`
+if [ x"$RELEASE_ID" = x ] ; then
+    error "creating release on GitHub failed: no release id"
+fi
 
 
 ######################################################################
