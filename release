@@ -68,13 +68,6 @@ EOF
 # Various little helper functions
 
 
-# Define variables from heredoc. This use the bash extension '-d' to the read
-# command, also supported by zsh. If this is an issue for you, file an issue,
-# and we can try to make it more portable.
-define() {
-    IFS='\n' read -r -d '' $1 || true
-}
-
 # print notices in green
 notice() {
     printf "\033[32m%s\033[0m\n" "$*"
@@ -407,7 +400,7 @@ if [ x"$MESSAGE" != x ] ; then
 fi
 
 # Create the release by sending suitable JSON
-define DATA <<EOF
+DATA=`cat <<EOF
 {
   "tag_name": "$TAG",
   "name": "$VERSION",
@@ -416,6 +409,8 @@ define DATA <<EOF
   "prerelease": false
 }
 EOF
+`
+
 notice "Creating new release $TAG on GitHub"
 response=`curl -s -S -H "Content-Type: application/json" \
  -X POST --data "$DATA" "$API_URL?access_token=$TOKEN"`
