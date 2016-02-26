@@ -422,11 +422,11 @@ for EXT in $ARCHIVE_FORMATS ; do
     notice "Creating $ARCHIVENAME ..."
     case $EXT in
     .tar.gz)
-        tar c $BASENAME | gzip -9c > $ARCHIVENAME
+        tar cf - $BASENAME | gzip -9c > $ARCHIVENAME
         MIMETYPE="application/x-gzip"
         ;;
     .tar.bz2)
-        tar c $BASENAME | bzip2 -9c > $ARCHIVENAME
+        tar cf - $BASENAME | bzip2 -9c > $ARCHIVENAME
         MIMETYPE="application/x-bzip2"
         ;;
     .zip)
