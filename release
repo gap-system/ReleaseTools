@@ -40,13 +40,13 @@ Actions
   -f, --force                      if a release with the same name already exists: overwrite it
 
 Paths
-  --srcdir <path>                  directory containing `PackageInfo.g` [Default: current directory]
-  --tmpdir <path>                  path to the source directory [Default: `tmp` subdirectory of src]
-  --webdir <path>                  path to the web directory [Default: `gh-pages` subdirectory of src]
+  --srcdir <path>                  directory containing PackageInfo.g [Default: current directory]
+  --tmpdir <path>                  path to the source directory [Default: tmp subdirectory of src]
+  --webdir <path>                  path to the web directory [Default: gh-pages subdirectory of src]
 
 Custom settings
   -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]
-  -r,  --repository <repository>   set GitHub repository (as `USERNAME/PKGNAME`)
+  -r,  --repository <repository>   set GitHub repository (as USERNAME/PKGNAME)
   --token <oauth>                  GitHub access token
   --remote <remote>                git remote to which tags are pushed [Default: origin]
 
