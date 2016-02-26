@@ -48,7 +48,7 @@ make a release.
     PackageInfoURL  := Concatenation( ~.PackageWWWHome, "/PackageInfo.g" ),
     ArchiveURL      := Concatenation( ~.SourceRepository.URL,
                                      "/releases/download/v", ~.Version,
-                                     "/", ~.PackageName ,"-", ~.Version ),
+                                     "/", ~.PackageName, "-", ~.Version ),
     ```
 
 4. Update your README, you package manual etc. to use the correct URLs.
