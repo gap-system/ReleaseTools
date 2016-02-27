@@ -328,6 +328,10 @@ fi
 mkdir -p "$TMP_DIR"
 rm -rf "$TMP_DIR"/$BASENAME*
 
+# Set umask to ensure the file permissions in the release
+# archives are sane.
+umask 0022
+
 notice "Exporting repository content for tag '$TAG'"
 git archive --prefix=$BASENAME/ $TAG . | tar xf - -C "$TMP_DIR"
 
