@@ -297,8 +297,9 @@ echo ""
 if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation (using makedoc.g)"
     $GAP -A -q <<GAPInput
-SetPackagePath("$PKG", ".");
-PushOptions(rec(relativePath:="../../.."));
+if not IsPackageMarkedForLoading("$PKG", "") then
+  SetPackagePath("$PKG", ".");
+fi;
 Read("makedoc.g");
 GAPInput
 elif [ -f doc/make_doc ] ; then
@@ -351,7 +352,9 @@ fi
 if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation for archives (using makedoc.g)"
     $GAP -A -q <<GAPInput
-SetPackagePath("$PKG", ".");
+if not IsPackageMarkedForLoading("$PKG", "") then
+  SetPackagePath("$PKG", ".");
+fi;
 PushOptions(rec(relativePath:="../../.."));
 Read("makedoc.g");
 GAPInput
