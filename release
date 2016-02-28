@@ -298,7 +298,7 @@ if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation (using makedoc.g)"
     $GAP -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
-PushOptions(rec(relativePath:=true));
+PushOptions(rec(relativePath:="../../.."));
 Read("makedoc.g");
 GAPInput
 elif [ -f doc/make_doc ] ; then
@@ -352,7 +352,7 @@ if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation for archives (using makedoc.g)"
     $GAP -A -q <<GAPInput
 SetPackagePath("$PKG", ".");
-PushOptions(rec(relativePath:=true));
+PushOptions(rec(relativePath:="../../.."));
 Read("makedoc.g");
 GAPInput
     rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,lab,log,out,pnr,tex,toc,tst}
