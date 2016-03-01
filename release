@@ -366,6 +366,10 @@ elif [ -f doc/make_doc ] ; then
     rm -f doc/*.{aux,bbl,blg,brf,idx,ilg,ind,log,out,pnr,toc,tst}
 fi
 
+# make sure every file is readable
+chmod -R a+r .
+
+
 ######################################################################
 #
 # Validate PackageInfo.g
