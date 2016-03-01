@@ -496,7 +496,9 @@ if [ -d "$TMP_DIR/$BASENAME/htm/" ] ; then
     cp -r "$TMP_DIR/$BASENAME/htm/" .
 fi
 
-$GAP -A -b update.g
+$GAP -A -q <<GAPInput
+Read("update.g");
+GAPInput
 
 git add -A .
 git commit -m "Update website for $PKG $VERSION"
