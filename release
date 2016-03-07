@@ -111,6 +111,11 @@ json_get_key() {
     echo "$response" | python -c 'import json,sys;obj=json.load(sys.stdin);print obj.get("'$1'","")'
 }
 
+# On Mac OS X, tar stores extended attributes in ._FOO files inside archives.
+# Setting COPYFILE_DISABLE prevents that. See <http://superuser.com/a/260264>
+export COPYFILE_DISABLE=1
+
+
 ######################################################################
 #
 # Command line processing
@@ -448,11 +453,11 @@ for EXT in $ARCHIVE_FORMATS ; do
     notice "Creating $ARCHIVENAME ..."
     case $EXT in
     .tar.gz)
-        COPYFILE_DISABLE=true tar cf - $BASENAME | gzip -9c > $ARCHIVENAME
+        tar cf - $BASENAME | gzip -9c > $ARCHIVENAME
         MIMETYPE="application/x-gzip"
         ;;
     .tar.bz2)
-        COPYFILE_DISABLE=true tar cf - $BASENAME | bzip2 -9c > $ARCHIVENAME
+        tar cf - $BASENAME | bzip2 -9c > $ARCHIVENAME
         MIMETYPE="application/x-bzip2"
         ;;
     .zip)
