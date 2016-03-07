@@ -98,7 +98,7 @@ eval_gap() {
   mkdir -p "$TMP_DIR"
   echo "$output" > "$TMP_DIR/gap-error.log"
   if echo "$output" | grep -q "\(FATAL ERROR\|Syntax \)" ; then
-    error "There was an error running GAP, see $TMP_DIR/gap-error.log"
+    error "there was an error running GAP, see $TMP_DIR/gap-error.log"
   fi
   eval "$output"
 }
@@ -173,7 +173,7 @@ if [ x$WEB_DIR = x ] ; then
     WEB_DIR="$SRC_DIR/gh-pages"
 fi
 if [ ! -d "$WEB_DIR" ] ; then
-    error "Could not find 'webdir' with clone of your gh-pages branch"
+    error "could not find 'webdir' with clone of your gh-pages branch"
 fi
 
 # Check whether GAP is usable
