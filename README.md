@@ -18,6 +18,29 @@ hosted on GitHub, and which are using the GitHub release system
 as well as GitHub pages for the package homepage.
 
 
+## Requirements
+
+The `release` script should run on any POSIX compatible system,
+provided the following tools are available:
+
+* [curl](https://curl.haxx.se/)
+* git
+* Python 2.6 or later
+* BSD or GNU tar (for creating `.tar.gz` and `.tar.bz2` archives)
+* zip (for creating `.zip` archives)
+
+In addition, you also need a recent version of GAP (4.7.8 or later
+should do it). By default the `release` script assumes that there is a
+`gap` executable in your PATH. If this is not the case, or if you want
+`release` to use another GAP executable, you can do so via the `GAP`
+environment variable.
+
+For example, you could invoke `release` like this:
+```
+GAP=/home/john_smith/gap/bin/gap.sh  ../ReleaseTools/release
+```
+
+
 ## Initial setup
 
 The following steps should be performed once on your package repository.
