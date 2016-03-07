@@ -165,6 +165,9 @@ fi
 command -v curl >/dev/null 2>&1 ||
     error "the 'curl' command was not found, please install it"
 
+command -v git >/dev/null 2>&1 ||
+    error "the 'git' command was not found, please install it"
+
 command -v python >/dev/null 2>&1 ||
     error "the 'python' command was not found, please install it"
 
