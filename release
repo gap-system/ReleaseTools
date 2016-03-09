@@ -321,8 +321,12 @@ fi
 git status --porcelain --untracked-files=no ||
     error "uncommitted changes detected"
 
+# Make sure the branch is on the server
+notice "Pushing your branch to $REMOTE"
+git push $REMOTE
+
 # Make sure the tag is on the server
-notice "Pushing your tag to GitHub"
+notice "Pushing your tag to $REMOTE"
 if [ x$FORCE = xyes ] ; then
     git push --force $REMOTE $TAG
 else
