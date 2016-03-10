@@ -321,18 +321,6 @@ fi
 git status --porcelain --untracked-files=no ||
     error "uncommitted changes detected"
 
-# Make sure the branch is on the server
-notice "Pushing your branch to $REMOTE"
-git push $REMOTE
-
-# Make sure the tag is on the server
-notice "Pushing your tag to $REMOTE"
-if [ x$FORCE = xyes ] ; then
-    git push --force $REMOTE $TAG
-else
-    git push $REMOTE $TAG
-fi
-
 ######################################################################
 #
 # Get fresh (unmodified) copies of the files, and generate some stuff
@@ -394,6 +382,26 @@ if not ValidatePackageInfo("PackageInfo.g") then
     FORCE_QUIT_GAP(1);
 fi;
 GAPInput
+
+
+######################################################################
+#
+# Push commits to GitHub
+#
+
+cd "$SRC_DIR"
+
+# Make sure the branch is on the server
+notice "Pushing your branch to $REMOTE"
+git push $REMOTE
+
+# Make sure the tag is on the server
+notice "Pushing your tag to $REMOTE"
+if [ x$FORCE = xyes ] ; then
+    git push --force $REMOTE $TAG
+else
+    git push $REMOTE $TAG
+fi
 
 
 ######################################################################
