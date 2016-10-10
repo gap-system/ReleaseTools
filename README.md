@@ -74,7 +74,7 @@ make a release.
                                      "/", ~.PackageName, "-", ~.Version ),
     ```
 
-4. Update your README, you package manual etc. to use the correct URLs.
+4. Update your README, your package manual etc. to use the correct URLs.
 
 5. Optionally: Provide a `makedoc.g` which regenerates your package manual.
    If you are using GAPDoc, often the AutoDoc package provides an easy way
