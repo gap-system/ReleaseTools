@@ -127,6 +127,7 @@ TMP_DIR="$PWD/tmp"
 PUSH=no
 FORCE=no
 REMOTE=origin
+ONLY_TARBALL=no
 while [ x"$1" != x ]; do
   option="$1" ; shift
   case "$option" in
@@ -147,6 +148,9 @@ while [ x"$1" != x ]; do
 
     -f | --force ) FORCE=yes ;;
     --no-force ) FORCE=no ;;
+
+    --only-tarball ) ONLY_TARBALL=yes ;;
+
     -- ) break ;;
     * ) error "unknown option '$option'" ;;
   esac
@@ -383,6 +387,14 @@ if not ValidatePackageInfo("PackageInfo.g") then
 fi;
 GAPInput
 
+
+######################################################################
+#
+# Abort early if user requested only creation of tarballs
+#
+if [ x$ONLY_TARBALL = xyes ] ; then
+    exit 0
+fi
 
 ######################################################################
 #
