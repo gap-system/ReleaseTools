@@ -73,7 +73,7 @@ notice() {
     printf "\033[32m%s\033[0m\n" "$*"
 }
 
-# print notices in yellow
+# print warnings in yellow
 warning() {
     printf "\033[33mWARNING: %s\033[0m\n" "$*"
 }
