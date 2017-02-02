@@ -314,6 +314,7 @@ if not IsPackageMarkedForLoading("$PKG", "") then
   SetPackagePath("$PKG", ".");
 fi;
 Read("makedoc.g");
+FORCE_QUIT_GAP(0);
 GAPInput
 elif [ -f doc/make_doc ] ; then
     notice "Building GAP package documentation (using doc/make_doc)"
@@ -362,6 +363,7 @@ if not IsPackageMarkedForLoading("$PKG", "") then
 fi;
 PushOptions(rec(relativePath:="../../.."));
 Read("makedoc.g");
+FORCE_QUIT_GAP(0);
 GAPInput
     rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.lab doc/*.log doc/*.out doc/*.pnr doc/*.tex doc/*.toc doc/*.tst
 elif [ -f doc/make_doc ] ; then
@@ -385,6 +387,7 @@ $GAP -A -q <<GAPInput || error "validation failed"
 if not ValidatePackageInfo("PackageInfo.g") then
     FORCE_QUIT_GAP(1);
 fi;
+FORCE_QUIT_GAP(0);
 GAPInput
 
 
@@ -533,6 +536,7 @@ fi
 
 $GAP -A -q <<GAPInput
 Read("update.g");
+FORCE_QUIT_GAP(0);
 GAPInput
 
 git add -A .
