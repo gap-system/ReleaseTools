@@ -201,6 +201,7 @@ eval_gap <<EOF
 Read("PackageInfo.g");
 Print("PKG=\"",GAPInfo.PackageInfoCurrent.PackageName,"\"\n");
 Print("VERSION=\"",GAPInfo.PackageInfoCurrent.Version,"\"\n");
+Print("PackageInfoURL=\"",GAPInfo.PackageInfoCurrent.PackageInfoURL,"\"\n");
 # extract archive formats; these can be comma or space separated, we want
 # to output them space separated
 tmp := GAPInfo.PackageInfoCurrent.ArchiveFormats;;
@@ -546,8 +547,13 @@ if [ x$PUSH = xyes ] ; then
     notice "Pushing website changes"
     git push
     notice "Done"
+    notice "Your PackageInfo.g is now at $PackageInfoURL"
 else
-    notice "To complete your release, run 'git push' in your gh-pages directory"
+    warning "To complete your release, run 'git push' in your gh-pages directory"
+    notice "Afterwards, your PackageInfo.g will be at $PackageInfoURL"
 fi
+
+notice "Please check your online PackageInfo.g using the validator at"
+notice "  <http://www.gap-system.org/Packages/validator.html>"
 
 exit 0
