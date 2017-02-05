@@ -531,8 +531,8 @@ if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
         cp "$TMP_DIR/$BASENAME/doc"/*.$ext doc/
     done
 fi
-if [ -d "$TMP_DIR/$BASENAME/htm/" ] ; then
-    cp -r "$TMP_DIR/$BASENAME/htm/" .
+if [ -d "$TMP_DIR/$BASENAME/htm" ] ; then
+    cp -r "$TMP_DIR/$BASENAME/htm" .
 fi
 
 $GAP -A -q <<GAPInput
