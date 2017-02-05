@@ -535,6 +535,9 @@ if [ -d "$TMP_DIR/$BASENAME/htm" ] ; then
     cp -r "$TMP_DIR/$BASENAME/htm" .
 fi
 
+# adjust links to the GAP manuals
+sed -i -e 's;href="../../../doc/;href="https://www.gap-system.org/Manuals/doc/;' */*.htm*
+
 $GAP -A -q <<GAPInput
 Read("update.g");
 FORCE_QUIT_GAP(0);
