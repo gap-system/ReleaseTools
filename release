@@ -536,7 +536,7 @@ if [ -d "$TMP_DIR/$BASENAME/htm" ] ; then
 fi
 
 # adjust links to the GAP manuals
-sed -i -e 's;href="../../../doc/;href="https://www.gap-system.org/Manuals/doc/;' */*.htm*
+sed -i -e 's;href="../../../doc/;href="https://www.gap-system.org/Manuals/doc/;g' */*.htm*
 
 $GAP -A -q <<GAPInput
 Read("update.g");
