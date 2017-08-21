@@ -232,7 +232,7 @@ fi
 #
 # Determine the tag, and validate it
 #
-git status --porcelain --untracked-files=no ||
+git diff-index --quiet HEAD -- ||
     error "uncommitted changes detected"
 
 if [ x"$TAG" = "x" ] ; then
@@ -324,7 +324,7 @@ else
     warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
 fi
 
-git status --porcelain --untracked-files=no ||
+git diff-index --quiet HEAD -- ||
     error "uncommitted changes detected"
 
 ######################################################################
