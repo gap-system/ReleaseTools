@@ -232,6 +232,7 @@ fi
 #
 # Determine the tag, and validate it
 #
+git update-index -- --refresh
 git diff-index --quiet HEAD -- ||
     error "uncommitted changes detected"
 
@@ -324,6 +325,7 @@ else
     warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
 fi
 
+git update-index -- --refresh
 git diff-index --quiet HEAD -- ||
     error "uncommitted changes detected"
 
