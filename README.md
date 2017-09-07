@@ -353,8 +353,8 @@ include the following:
 
 - talk about design goals, in particular: encoding information in as few places as possible.
 - talk about using GitHub releases system
-- talk about https://github.com/fingolfin/GitHubPagesForGAP
-- update https://github.com/fingolfin/PackageMaker to (optionally?)
+- talk about https://github.com/gap-system/GitHubPagesForGAP
+- update https://github.com/gap-system/PackageMaker to (optionally?)
   set up everything for this process
 - ...
 
@@ -362,10 +362,10 @@ include the following:
 ## Contact
 
 Please submit bug reports, suggestions for improvements and patches via
-the [issue tracker](https://github.com/fingolfin/ReleaseTools/issues).
+the [issue tracker](https://github.com/gap-system/ReleaseTools/issues).
 
 You can also contact me directly via [email](max@quendi.de).
 
-Copyright (c) 2013-2016 Max Horn
+Copyright (c) 2013-2017 Max Horn
 
-[GitHubPagesForGAP]: https://github.com/fingolfin/GitHubPagesForGAP
+[GitHubPagesForGAP]: https://github.com/gap-system/GitHubPagesForGAP
