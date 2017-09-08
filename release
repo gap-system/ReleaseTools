@@ -126,7 +126,6 @@ TMP_DIR="$PWD/tmp"
 
 PUSH=no
 FORCE=no
-REMOTE=origin
 ONLY_TARBALL=no
 while [ x"$1" != x ]; do
   option="$1" ; shift
@@ -140,8 +139,6 @@ while [ x"$1" != x ]; do
     -t | --tag ) TAG="$1"; shift ;;
     -r | --repository ) REPO="$1"; shift ;;
     --token ) TOKEN="$1"; shift ;;
-
-    --remote ) REMOTE="$1"; shift ;;
 
     -p | --push ) PUSH=yes ;;
     --no-push ) PUSH=no ;;
@@ -409,12 +406,17 @@ fi
 
 cd "$SRC_DIR"
 
+# construct GitHub URL for pusing
+BRANCH=$(git symbolic-ref -q --short HEAD)
+USER=$(dirname "$REPO")
+REMOTE="https://$USER:$TOKEN@github.com/$REPO"
+
 # Make sure the branch is on the server
-notice "Pushing your branch to $REMOTE"
-git push "$REMOTE"
+notice "Pushing your branch to GitHub"
+git push "$REMOTE" "$BRANCH"
 
 # Make sure the tag is on the server
-notice "Pushing your tag to $REMOTE"
+notice "Pushing your tag to GitHub"
 if [ "x$FORCE" = xyes ] ; then
     git push --force "$REMOTE" "$TAG"
 else
