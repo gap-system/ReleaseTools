@@ -108,7 +108,7 @@ eval_gap() {
 # we may end up parsing the same JSON data two times, but that
 # doesn't really matter as it is tiny.
 json_get_key() {
-    echo "$response" | python -c 'import json,sys;obj=json.load(sys.stdin);print obj.get("'"$1"'","")'
+    echo "$response" | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj.get("'"$1"'",""))'
 }
 
 # On Mac OS X, tar stores extended attributes in ._FOO files inside archives.
