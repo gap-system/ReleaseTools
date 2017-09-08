@@ -108,7 +108,7 @@ eval_gap() {
 # we may end up parsing the same JSON data two times, but that
 # doesn't really matter as it is tiny.
 json_get_key() {
-    echo "$response" | python -c 'import json,sys;obj=json.load(sys.stdin);print obj.get("'$1'","")'
+    echo "$response" | python -c 'import json,sys;obj=json.load(sys.stdin);print obj.get("'"$1"'","")'
 }
 
 # On Mac OS X, tar stores extended attributes in ._FOO files inside archives.
@@ -167,7 +167,7 @@ if [ ! -f PackageInfo.g ] ; then
 fi
 
 # Check for webdir presence
-if [ x$WEB_DIR = x ] ; then
+if [ "x$WEB_DIR" = x ] ; then
     WEB_DIR="$SRC_DIR/gh-pages"
 fi
 if [ ! -d "$WEB_DIR" ] ; then
@@ -175,7 +175,7 @@ if [ ! -d "$WEB_DIR" ] ; then
 fi
 
 # Check whether GAP is usable
-if [ x$GAP = x ] ; then
+if [ "x$GAP" = x ] ; then
     GAP="gap"
 fi
 command -v $GAP >/dev/null 2>&1 ||
@@ -246,17 +246,17 @@ fi
 if [ "$TAG" != "$GAP_TAG" ] ; then
     error "given tag $TAG does not match tag $GAP_TAG found in PackageInfo.g"
 fi
-if git show-ref -q $TAG ; then
+if git show-ref -q "$TAG" ; then
     notice "Using git tag $TAG"
 else
     notice "Creating git tag $TAG"
-    git tag $TAG
+    git tag "$TAG"
 fi;
 
-HEAD_REF=`git rev-parse --verify HEAD`
-TAG_REF=`git rev-parse --verify $TAG`
+HEAD_REF=$(git rev-parse --verify HEAD)
+TAG_REF=$(git rev-parse --verify "$TAG")
 
-if [ $TAG_REF != $HEAD_REF ] ; then
+if [ "x$TAG_REF" != "x$HEAD_REF" ] ; then
     error "tag $TAG is not the HEAD commit -- did you tag the right commit?"
 fi
 
@@ -288,13 +288,13 @@ UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
 # Fetch GitHub oauth token, used to authenticate the following commands.
 # See https://help.github.com/articles/git-automation-with-oauth-tokens/
 #
-if [ x$TOKEN = x ] ; then
-    TOKEN=`git config --get github.token || echo`
+if [ "x$TOKEN" = x ] ; then
+    TOKEN=$(git config --get github.token || echo)
 fi
-if [ x$TOKEN = x ] && [ -r ~/.github_shell_token ] ; then
-    TOKEN=`cat ~/.github_shell_token`
+if [ "x$TOKEN" = x ] && [ -r ~/.github_shell_token ] ; then
+    TOKEN=$(cat ~/.github_shell_token)
 fi
-if [ x$TOKEN = x ] ; then
+if [ "x$TOKEN" = x ] ; then
     error "could not determine GitHub access token, please use the --token option"
 fi
 
@@ -336,14 +336,14 @@ git diff-index --quiet HEAD -- ||
 
 # Clean any remains of previous export attempts
 mkdir -p "$TMP_DIR"
-rm -rf "$TMP_DIR"/$BASENAME*
+rm -rf "$TMP_DIR/$BASENAME"*
 
 # Set umask to ensure the file permissions in the release
 # archives are sane.
 umask 0022
 
 notice "Exporting repository content for tag '$TAG'"
-git archive --prefix=$BASENAME/ $TAG . | tar xf - -C "$TMP_DIR"
+git archive --prefix="$BASENAME/" "$TAG" . | tar xf - -C "$TMP_DIR"
 
 
 # Build the package documentation, run autoconf, etc.
@@ -398,7 +398,7 @@ GAPInput
 #
 # Abort early if user requested only creation of tarballs
 #
-if [ x$ONLY_TARBALL = xyes ] ; then
+if [ "x$ONLY_TARBALL" = xyes ] ; then
     exit 0
 fi
 
@@ -411,14 +411,14 @@ cd "$SRC_DIR"
 
 # Make sure the branch is on the server
 notice "Pushing your branch to $REMOTE"
-git push $REMOTE
+git push "$REMOTE"
 
 # Make sure the tag is on the server
 notice "Pushing your tag to $REMOTE"
-if [ x$FORCE = xyes ] ; then
-    git push --force $REMOTE $TAG
+if [ "x$FORCE" = xyes ] ; then
+    git push --force "$REMOTE" "$TAG"
 else
-    git push $REMOTE $TAG
+    git push "$REMOTE" "$TAG"
 fi
 
 
@@ -428,17 +428,17 @@ fi
 #
 
 # check if release already exists
-response=`curl -s -S -X GET "$API_URL/tags/$TAG?access_token=$TOKEN"`
-MESSAGE=`json_get_key message`
-RELEASE_ID=`json_get_key id`
+response=$(curl -s -S -X GET "$API_URL/tags/$TAG?access_token=$TOKEN")
+MESSAGE=$(json_get_key message)
+RELEASE_ID=$(json_get_key id)
 
 if [ "$MESSAGE" = "Not Found" ] ; then
     MESSAGE=  # release does not yet exist -> that's how we like it
 elif [ x"$RELEASE_ID" != x ] ; then
     # release already exists -> error out or delete it
-    if [ x$FORCE = xyes ] ; then
+    if [ "x$FORCE" = xyes ] ; then
         notice "Deleting existing release $TAG from GitHub"
-        response=`curl --fail -s -S -X DELETE "$API_URL/$RELEASE_ID?access_token=$TOKEN"`
+        response=$(curl --fail -s -S -X DELETE "$API_URL/$RELEASE_ID?access_token=$TOKEN")
         MESSAGE=
     else
         error "release $TAG already exists on GitHub, aborting (use --force to override this)"
@@ -450,7 +450,7 @@ if [ x"$MESSAGE" != x ] ; then
 fi
 
 # Create the release by sending suitable JSON
-DATA=`cat <<EOF
+DATA=$(cat <<EOF
 {
   "tag_name": "$TAG",
   "name": "$VERSION",
@@ -459,17 +459,17 @@ DATA=`cat <<EOF
   "prerelease": false
 }
 EOF
-`
+)
 
 notice "Creating new release $TAG on GitHub"
-response=`curl -s -S -H "Content-Type: application/json" \
- -X POST --data "$DATA" "$API_URL?access_token=$TOKEN"`
+response=$(curl -s -S -H "Content-Type: application/json" \
+ -X POST --data "$DATA" "$API_URL?access_token=$TOKEN")
 
-MESSAGE=`json_get_key message`
+MESSAGE=$(json_get_key message)
 if [ x"$MESSAGE" != x ] ; then
     error "creating release on GitHub failed: $MESSAGE"
 fi
-RELEASE_ID=`json_get_key id`
+RELEASE_ID=$(json_get_key id)
 if [ x"$RELEASE_ID" = x ] ; then
     error "creating release on GitHub failed: no release id"
 fi
@@ -487,15 +487,15 @@ for EXT in $ARCHIVE_FORMATS ; do
     notice "Creating $ARCHIVENAME ..."
     case $EXT in
     .tar.gz)
-        tar cf - $BASENAME | gzip -9c > $ARCHIVENAME
+        tar cf - "$BASENAME" | gzip -9c > "$ARCHIVENAME"
         MIMETYPE="application/x-gzip"
         ;;
     .tar.bz2)
-        tar cf - $BASENAME | bzip2 -9c > $ARCHIVENAME
+        tar cf - "$BASENAME" | bzip2 -9c > "$ARCHIVENAME"
         MIMETYPE="application/x-bzip2"
         ;;
     .zip)
-        zip -r9 --quiet $ARCHIVENAME $BASENAME
+        zip -r9 --quiet "$ARCHIVENAME" "$BASENAME"
         MIMETYPE="application/zip"
         ;;
     *)
@@ -503,16 +503,16 @@ for EXT in $ARCHIVE_FORMATS ; do
         continue
         ;;
     esac
-    if [ ! -f $FULLNAME ] ; then
+    if [ ! -f "$FULLNAME" ] ; then
         error "failed creating $FULLNAME"
     fi
     notice "Uploading $ARCHIVENAME with mime type $MIMETYPE"
-    response=`curl --fail --progress-bar -o "$TMP_DIR/upload.log" \
+    response=$(curl --fail --progress-bar -o "$TMP_DIR/upload.log" \
         -X POST "$UPLOAD_URL/$RELEASE_ID/assets?name=$ARCHIVENAME" \
         -H "Accept: application/vnd.github.v3+json" \
         -H "Authorization: token $TOKEN" \
         -H "Content-Type: $MIMETYPE" \
-        --data-binary @"$FULLNAME"`
+        --data-binary @"$FULLNAME")
 done
 
 
@@ -548,7 +548,7 @@ GAPInput
 git add -A .
 git commit -m "Update website for $PKG $VERSION"
 
-if [ x$PUSH = xyes ] ; then
+if [ "x$PUSH" = xyes ] ; then
     notice "Pushing website changes"
     git push
     notice "Done"
