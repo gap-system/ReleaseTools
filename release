@@ -336,7 +336,7 @@ git diff-index --quiet HEAD -- ||
 
 # Clean any remains of previous export attempts
 mkdir -p "$TMP_DIR"
-rm -rf "$TMP_DIR/$BASENAME"*
+rm -rf "${TMP_DIR:?}/$BASENAME"*
 
 # Set umask to ensure the file permissions in the release
 # archives are sane.
