@@ -71,17 +71,17 @@ EOF
 
 # print notices in green
 notice() {
-    printf "\033[32m%s\033[0m\n" "$*"
+    printf '\033[32m%s\033[0m\n' "$*"
 }
 
 # print warnings in yellow
 warning() {
-    printf "\033[33mWARNING: %s\033[0m\n" "$*"
+    printf '\033[33mWARNING: %s\033[0m\n' "$*"
 }
 
 # print error in red and exit
 error() {
-    printf "\033[31mERROR: %s\033[0m\n" "$*"
+    printf '\033[31mERROR: %s\033[0m\n' "$*"
     exit 1
 }
 
@@ -98,7 +98,7 @@ eval_gap() {
     | tr -d '\r' )
   mkdir -p "$TMP_DIR"
   echo "$output" > "$TMP_DIR/gap-error.log"
-  if echo "$output" | grep -q "\(Error\|FATAL ERROR\|Syntax \)" ; then
+  if echo "$output" | grep -q '\(Error\|FATAL ERROR\|Syntax \)' ; then
     error "there was an error running GAP, see $TMP_DIR/gap-error.log"
   fi
   eval "$output"
