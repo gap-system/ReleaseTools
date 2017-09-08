@@ -120,7 +120,6 @@ export COPYFILE_DISABLE=1
 #
 # Command line processing
 #
-BASE_DIR="$PWD"     # remember base dir, to allow user to specify relative webdir
 SRC_DIR="$PWD"
 TMP_DIR="$PWD/tmp"
 
