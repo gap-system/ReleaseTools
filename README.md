@@ -13,9 +13,9 @@ package authors to automate this process as much as possible, so that
 making a fresh release of a package becomes a quick and painless
 undertaking.
 
-These tools are for now focused on making releases for packages
-hosted on GitHub, and which are using the GitHub release system
-as well as GitHub pages for the package homepage.
+These tools are focused on making releases for packages hosted on
+GitHub, and which are using the GitHub release system as well as GitHub
+pages for the package homepage.
 
 
 ## Requirements
@@ -40,6 +40,12 @@ For example, you could invoke `release` like this:
 GAP=/home/john_smith/gap/bin/gap.sh  ../ReleaseTools/release
 ```
 
+Your package must also be hosted on GitHub.
+
+Finally, you need a GitHub access token, which the script uses to authenticate
+with GitHub, so that it gets permission to upload files for you. For details,
+please read section "GitHub access token" later in this README.
+
 
 ## Initial setup
 
@@ -47,18 +53,15 @@ The following steps should be performed once on your package repository.
 After that, you can follow the instructions in the next section to
 make a release.
 
-1. Make sure your package source code is hosted on GitHub, say under
-   https://github.com/USER/FOOBAR where FOOBAR is the name of your package.
-   We will from now on refer to `USER/FOOBAR` as the "repository" of your
-   package.
+1. Setup [GitHubPagesForGAP][] for your package, as described in its README.
 
-2. Setup [GitHubPagesForGAP][] for your package, as described in its README.
-
-3. Adjust your `PackageInfo.g` file to use GitHub. This may require adjusting
+2. Adjust your `PackageInfo.g` file to use GitHub. This may require adjusting
    `PackageWWWHome`, `README_URL`, `PackageInfoURL`, `ArchiveURL`. An easy
    way to do that is to use the following in your `PackageInfo.g`.
    It assumes that your package name is equal to the repository name;
-   note that case matters.
+   note that case matters. Also, you may have to replace "gap-packages" by
+   your username (the generated URLs must match the URL of your package's
+   repository).
 
     ```
     SourceRepository := rec(
@@ -74,18 +77,17 @@ make a release.
                                      "/", ~.PackageName, "-", ~.Version ),
     ```
 
-4. Update your README, your package manual etc. to use the correct URLs.
+3. Update your README, your package manual etc. to use the correct URLs.
 
-5. Optionally: Provide a `makedoc.g` which regenerates your package manual.
+4. Provide a `makedoc.g` GAP file which regenerates your package manual.
    If you are using GAPDoc, often the AutoDoc package provides an easy way
-   for doing this, as in the following example (however, you do not
-   have to use AutoDoc for this at all):
+   for doing this, as in the following example:
 
    ```
-   LoadPackage("AutoDoc", "2014.03.27");
-   SetPackagePath("FOOBAR", ".");
-   AutoDoc("FOOBAR");
-   QUIT;
+   if fail = LoadPackage("AutoDoc", "2016.02.16") then
+       Error("AutoDoc version 2016.02.16 or newer is required.");
+   fi;
+   AutoDoc();
    ```
 
    As a fallback, we also looks for a `doc/make_doc` executable.
@@ -123,18 +125,11 @@ environment variable to contain the full path to your GAP executable
 
 3. Update the version and release date in `PackageInfo.g`.
 
-4. If you *are not* using AutoDoc to generating the title page of your
-   package manual, also adjust the release date and version in your manual
-   (typically this means `doc/FOOBAR.xml`).
+4. Adjust the release date and version in your manual. Note that AutoDoc can do this
+   automatically for you (please consult its manual to learn more).
 
-   If you *are* using AutoDoc for this, make sure to run it now:
-
-   ```
-   gap -A makedoc.g
-   ```
-
-5. Make sure that any other files containing the version and release date
-   are updated (e.g. a `CHANGES` with release notes).
+5. Make sure that any files containing the version and release date
+   are updated (e.g. the manual; your `CHANGES` or `VERSION` files, etc.).
 
 6. Commit all your changes to `PackageInfo.g`, `VERSION`, documentation, etc., e.g.:
 
@@ -142,20 +137,7 @@ environment variable to contain the full path to your GAP executable
    git commit --all -m "Version 1.2.3"
    ```
 
-7. Tag the release (this is required for the GitHub release system), and push
-   your changes
-
-    ```
-    git tag v1.2.3
-    git push
-    ```
-
-   Note: By default, `release` attempts to guess the correct tag name by
-   inspecting the `ArchiveURL` in your `PackageInfo.g`; if that fails, it uses
-   a tag name of the form `vVERSION`. You can override this, if you really
-   want, but we strongly recommend using the default for simplicity.
-
-8. Create the release using the `release` script included here:
+7. Create the release using the `release` script included here:
 
     ```
     PATH/TO/ReleaseTools/release
@@ -163,17 +145,16 @@ environment variable to contain the full path to your GAP executable
 
    If this does not work, please refer to the section discussing `release`.
 
-9. Verify that everything went fine by visiting
-   https://github.com/USER/FOOBAR/releases/tag/v1.2.3 and
-   https://USER.github.io/FOOBAR
+8. Verify that everything went fine by visiting
+   <https://github.com/USER/FOOBAR/releases/tag/v1.2.3> and
+   <https://USER.github.io/FOOBAR>
 
-   In particular, test the release archives created by the previous step. If you are unhappy
-   with the outcome, or for some other reason decide that you need
-   more changes, do these and go back and repeat previous steps
-   as necessary (in step 7, you now need to pass "--force" to `git tag`,
-   `git push` and the `release` tool)
+   In particular, test the release archives created by the previous step. If
+   you are unhappy with the outcome, or for some other reason decide that you
+   need more changes, do these and go back and repeat previous steps as
+   necessary (in step 8, you now need to pass "--force" to the `release` tool)
 
-10. Update the website:
+9. Update the website:
 
     ```
     cd gh-pages && git push
@@ -184,10 +165,10 @@ environment variable to contain the full path to your GAP executable
 
 
 That's it. You should now be able to see the new version on
-  https://USER.github.io/FOOBAR
+  <https://USER.github.io/FOOBAR>
 and also be able to view the manual there, download the new version
 etc. Moreover
-  https://USER.github.io/FOOBAR/PackageInfo.g
+  <https://USER.github.io/FOOBAR/PackageInfo.g>
 should be up-to-date. So if the GAP server already has this registered
 as location of your `PackageInfo.g`, it should now automatically
 detect that you made a release, and pull it into the next
@@ -239,7 +220,6 @@ uses that to guess the release tag.
 
 
 #### What it does
-
 
 The `release` script does multiple things for you:
 
@@ -296,17 +276,25 @@ The `release` script does multiple things for you:
 The `release` script needs limited write access to your repository in
 order to upload the release archives for you. In order to do this,
 the scripts needs to authenticate itself with GitHub, for which it needs
-a so-called GitHub access token. To generate one, please follow
-the instructions at
-<https://help.github.com/articles/creating-an-access-token-for-command-line-use>.
+a so-called "personal access token". You can generate such a token as follows
+(see also <https://help.github.com/articles/creating-an-access-token-for-command-line-use>).
 
-When creating the token, you will have to select which "scopes" it is for.
-The only scope needed by the `release` scrips it the `repo` scope.
+1. Go to <https://github.com/settings/tokens>.
+
+2. Click **Generate new token**.
+
+3. Select the scope "public_repo", and give your token a descriptive name.
+
+4. Click **Generate token** at the bottom of the page.
+
+5. Copy the token to your clipboard. For security reasons, after you navigate
+   off the page, you will not be able to see the token again. You therefore
+   should store it somewhere, e.g. with option 3 in the following list.
 
 There are multiple ways to tell the `release` script what your token is. In
 order of their precedence (from highest to lowest), these are:
 
-1. Use the `--token` command line option. E.g.
+1. Use the `--token` command line option:
     ```
     ./release --token VALUE ...
     ```
@@ -314,8 +302,7 @@ order of their precedence (from highest to lowest), these are:
 2. Set the environment variable `TOKEN` to the token value.
    This is mainly useful in scripts. E.g.
     ```
-    TOKEN=VALUE
-    ./release ...
+    TOKEN=VALUE ./release ...
     ```
 
 3. Add the token to your git config, by setting `github.token`. As usual with
@@ -329,34 +316,8 @@ order of their precedence (from highest to lowest), these are:
    For details, please refer to `git help config`.
 
 4. Create a file `~/.github_shell_token` containing your token and nothing else.
-   If you do this, make sure this file is not readable by other users, i.e.
+   If you do this, make sure this file is not readable by other users, i.e.,
    run `chmod 0600 ~/.github_shell_token`
-
-
-
-## Packages using the ReleaseTools
-
-Packages that are (mostly) following the release process outlined here
-include the following:
-
-* https://github.com/gap-package/cvec
-* https://github.com/gap-package/genss
-* https://github.com/gap-package/io
-* https://github.com/gap-package/nq
-* https://github.com/gap-package/orb
-* https://github.com/gap-package/polenta
-* https://github.com/gap-package/recog
-* https://github.com/gap-package/recogbase
-
-
-## TODO
-
-- talk about design goals, in particular: encoding information in as few places as possible.
-- talk about using GitHub releases system
-- talk about https://github.com/gap-system/GitHubPagesForGAP
-- update https://github.com/gap-system/PackageMaker to (optionally?)
-  set up everything for this process
-- ...
 
 
 ## Contact
