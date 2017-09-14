@@ -592,7 +592,4 @@ else
     notice "Afterwards, your PackageInfo.g will be at $PackageInfoURL"
 fi
 
-notice "Please check your online PackageInfo.g using the validator at"
-notice "  <http://www.gap-system.org/Packages/validator.html>"
-
 exit 0
