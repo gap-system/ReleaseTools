@@ -123,6 +123,7 @@ export COPYFILE_DISABLE=1
 SRC_DIR="$PWD"
 TMP_DIR="$PWD/tmp"
 PackageInfoURL=
+README_URL=
 
 PUSH=no
 FORCE=no
@@ -203,6 +204,7 @@ Read("PackageInfo.g");
 Print("PKG=\"",GAPInfo.PackageInfoCurrent.PackageName,"\"\n");
 Print("VERSION=\"",GAPInfo.PackageInfoCurrent.Version,"\"\n");
 Print("PackageInfoURL=\"",GAPInfo.PackageInfoCurrent.PackageInfoURL,"\"\n");
+Print("README_URL=\"",GAPInfo.PackageInfoCurrent.README_URL,"\"\n");
 # extract archive formats; these can be comma or space separated, we want
 # to output them space separated
 tmp := GAPInfo.PackageInfoCurrent.ArchiveFormats;;
@@ -401,6 +403,15 @@ GAPInput
 
 ######################################################################
 #
+# Verify README_URL refers to an existing file
+#
+README_NAME=$(basename "$README_URL")
+[ -f "$README_NAME" ] ||
+    error "No file named '$README_NAME' exists; is your README_URL valid?"
+
+
+######################################################################
+#
 # Abort early if user requested only creation of tarballs
 #
 if [ "x$ONLY_TARBALL" = xyes ] ; then
@@ -534,7 +545,7 @@ notice "Updating website"
 cd "$WEB_DIR"
 git pull --ff-only
 
-cp "$TMP_DIR/$BASENAME/README"* .
+cp "$TMP_DIR/$BASENAME/$README_NAME" .
 cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
 rm -rf doc/ htm/
 if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
