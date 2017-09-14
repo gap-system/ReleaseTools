@@ -123,6 +123,7 @@ export COPYFILE_DISABLE=1
 #
 SRC_DIR="$PWD"
 TMP_DIR="$PWD/tmp"
+PackageInfoURL=
 
 PUSH=no
 FORCE=no
