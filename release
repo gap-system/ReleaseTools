@@ -136,6 +136,10 @@ while [ x"$1" != x ]; do
     --webdir ) WEB_DIR="$1"; shift ;;
     --tmpdir ) TMP_DIR="$1"; shift ;;
 
+    --srcdir=*) SRC_DIR=${option#--srcdir=}; shift ;;
+    --webdir=*) WEB_DIR=${option#--webdir=}; shift ;;
+    --tmpdir=*) TMP_DIR=${option#--tmpdir=}; shift ;;
+
     -t | --tag ) TAG="$1"; shift ;;
     -r | --repository ) REPO="$1"; shift ;;
     --token ) TOKEN="$1"; shift ;;
