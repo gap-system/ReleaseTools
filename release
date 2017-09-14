@@ -376,6 +376,10 @@ fi
 # make sure every file is readable
 chmod -R a+r .
 
+# basic sanity check
+fgrep -q -r '<a href="/' doc/ &&
+    error "HTML manual contains absolute paths"
+
 
 ######################################################################
 #
