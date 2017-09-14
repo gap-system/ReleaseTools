@@ -233,6 +233,86 @@ fi
 
 ######################################################################
 #
+# Verify there are no uncommitted changes. Also, run makedoc.g (if
+# present), as that also can uncover mistakes (e.g. for projects which
+# generate doc/title.xml from PackageInfo.g, it is easy to forget that
+# when making the release commit).
+#
+if [ -f makedoc.g ] ; then
+    notice "Building GAP package documentation (using makedoc.g)"
+    $GAP -A -q <<GAPInput
+if not IsPackageMarkedForLoading("$PKG", "") then
+  SetPackagePath("$PKG", ".");
+fi;
+Read("makedoc.g");
+FORCE_QUIT_GAP(0);
+GAPInput
+elif [ -f doc/make_doc ] ; then
+    notice "Building GAP package documentation (using doc/make_doc)"
+    cd doc && ./make_doc && cd ..
+else
+    warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
+fi
+
+git update-index --refresh
+git diff-index --quiet HEAD -- ||
+    error "uncommitted changes detected"
+
+
+######################################################################
+#
+# Determine the basename for the package archives
+#
+#
+if [ x"$BASENAME" = "x" ] ; then
+    BASENAME="$PKG-"
+fi
+BASENAME="$BASENAME$VERSION"
+notice "Using archive basename $BASENAME"
+
+
+######################################################################
+#
+# Fetch GitHub oauth token, used to authenticate the following commands.
+# See https://help.github.com/articles/git-automation-with-oauth-tokens/
+#
+if [ "x$TOKEN" = x ] ; then
+    TOKEN=$(git config --get github.token || echo)
+fi
+if [ "x$TOKEN" = x ] && [ -r ~/.github_shell_token ] ; then
+    TOKEN=$(cat ~/.github_shell_token)
+fi
+if [ "x$TOKEN" = x ] ; then
+    error "could not determine GitHub access token, please consult the README"
+fi
+
+
+######################################################################
+#
+# Determine GitHub repository and username, and the current branch
+#
+if [ x"$REPO" = "x" ] ; then
+    error "could not guess GitHub repository"
+fi
+notice "Using GitHub repository $REPO"
+
+GITHUB_USER=$(dirname "$REPO")
+notice "Using GitHub username $GITHUB_USER"
+
+BRANCH=$(git symbolic-ref -q --short HEAD)
+notice "Publishing on branch $BRANCH"
+
+
+######################################################################
+#
+# Derive API urls
+#
+API_URL=https://api.github.com/repos/$REPO/releases
+UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
+
+
+######################################################################
+#
 # Determine the tag, and validate it
 #
 git update-index --refresh
@@ -263,74 +343,9 @@ if [ "x$TAG_REF" != "x$HEAD_REF" ] ; then
     error "tag $TAG is not the HEAD commit -- did you tag the right commit?"
 fi
 
-######################################################################
-#
-# Determine the basename for the package archives
-#
-#
-if [ x"$BASENAME" = "x" ] ; then
-    BASENAME="$PKG-"
-fi
-BASENAME="$BASENAME$VERSION"
-notice "Using archive basename $BASENAME"
-
-######################################################################
-#
-# Determine the GitHub repository and derive API urls from it
-#
-if [ x"$REPO" = "x" ] ; then
-    error "could not guess GitHub repository"
-fi
-notice "Using GitHub repository $REPO"
-
-API_URL=https://api.github.com/repos/$REPO/releases
-UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
-
-######################################################################
-#
-# Fetch GitHub oauth token, used to authenticate the following commands.
-# See https://help.github.com/articles/git-automation-with-oauth-tokens/
-#
-if [ "x$TOKEN" = x ] ; then
-    TOKEN=$(git config --get github.token || echo)
-fi
-if [ "x$TOKEN" = x ] && [ -r ~/.github_shell_token ] ; then
-    TOKEN=$(cat ~/.github_shell_token)
-fi
-if [ "x$TOKEN" = x ] ; then
-    error "could not determine GitHub access token, please consult the README"
-fi
-
 
 echo ""
 
-
-######################################################################
-#
-# Verify there are no uncommitted changes. Also, run makedoc.g (if
-# present), as that also can uncover mistakes (e.g. for projects which
-# generate doc/title.xml from PackageInfo.g, it is easy to forget that
-# when making the release commit).
-#
-if [ -f makedoc.g ] ; then
-    notice "Building GAP package documentation (using makedoc.g)"
-    $GAP -A -q <<GAPInput
-if not IsPackageMarkedForLoading("$PKG", "") then
-  SetPackagePath("$PKG", ".");
-fi;
-Read("makedoc.g");
-FORCE_QUIT_GAP(0);
-GAPInput
-elif [ -f doc/make_doc ] ; then
-    notice "Building GAP package documentation (using doc/make_doc)"
-    cd doc && ./make_doc && cd ..
-else
-    warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
-fi
-
-git update-index --refresh
-git diff-index --quiet HEAD -- ||
-    error "uncommitted changes detected"
 
 ######################################################################
 #
@@ -426,9 +441,7 @@ fi
 cd "$SRC_DIR"
 
 # construct GitHub URL for pusing
-BRANCH=$(git symbolic-ref -q --short HEAD)
-USER=$(dirname "$REPO")
-REMOTE="https://$USER:$TOKEN@github.com/$REPO"
+REMOTE="https://$GITHUB_USER:$TOKEN@github.com/$REPO"
 
 # Make sure the branch is on the server
 notice "Pushing your branch to GitHub"
