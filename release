@@ -84,6 +84,13 @@ error() {
     exit 1
 }
 
+# check for uncommitted changes
+verify_git_clean() {
+    git update-index --refresh
+    git diff-index --quiet HEAD -- ||
+        error "uncommitted changes detected"
+}
+
 # execute GAP commands from a heredoc, and evaluate the result,
 # unless GAP reported any errors
 eval_gap() {
@@ -192,6 +199,7 @@ command -v git >/dev/null 2>&1 ||
 command -v python >/dev/null 2>&1 ||
     error "the 'python' command was not found, please install it"
 
+verify_git_clean()
 
 
 ######################################################################
@@ -233,10 +241,9 @@ fi
 
 ######################################################################
 #
-# Verify there are no uncommitted changes. Also, run makedoc.g (if
-# present), as that also can uncover mistakes (e.g. for projects which
-# generate doc/title.xml from PackageInfo.g, it is easy to forget that
-# when making the release commit).
+# Run makedoc.g (if present), as that also can uncover mistakes (e.g.
+# for projects which generate doc/title.xml from PackageInfo.g, it is
+# easy to forget that when making the release commit).
 #
 if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation (using makedoc.g)"
@@ -254,9 +261,8 @@ else
     warning "Could not build manual (no makedoc.g and no doc/make_doc found)"
 fi
 
-git update-index --refresh
-git diff-index --quiet HEAD -- ||
-    error "uncommitted changes detected"
+# check if building the manual modified any files
+verify_git_clean()
 
 
 ######################################################################
@@ -315,9 +321,7 @@ UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
 #
 # Determine the tag, and validate it
 #
-git update-index --refresh
-git diff-index --quiet HEAD -- ||
-    error "uncommitted changes detected"
+verify_git_clean()
 
 if [ x"$TAG" = "x" ] ; then
     if [ x"$GAP_TAG" = "x" ] ; then
