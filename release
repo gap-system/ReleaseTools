@@ -199,7 +199,7 @@ command -v git >/dev/null 2>&1 ||
 command -v python >/dev/null 2>&1 ||
     error "the 'python' command was not found, please install it"
 
-verify_git_clean()
+verify_git_clean
 
 
 ######################################################################
@@ -262,7 +262,7 @@ else
 fi
 
 # check if building the manual modified any files
-verify_git_clean()
+verify_git_clean
 
 
 ######################################################################
@@ -321,7 +321,7 @@ UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
 #
 # Determine the tag, and validate it
 #
-verify_git_clean()
+verify_git_clean
 
 if [ x"$TAG" = "x" ] ; then
     if [ x"$GAP_TAG" = "x" ] ; then
