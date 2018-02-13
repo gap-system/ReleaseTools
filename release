@@ -374,6 +374,17 @@ cd "$TMP_DIR/$BASENAME"
 notice "Removing unnecessary files"
 rm -f .git* .hg* .cvs*
 
+# execute .release script, if present
+if [ -f .release ] ; then
+    # the .release script can perform additional preparation, e.g.:
+    # * add files for distribution which are not part of the repository;
+    # * remove further files not intended for distribution (e.g. scripts/ directory);
+    # * build the package manual in a custom way;
+    # * perform additional sanity checks;
+    # * ...
+    . .release
+fi
+
 if [ -x autogen.sh ] ; then
     notice "Generating build system files"
     sh autogen.sh
