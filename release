@@ -384,6 +384,7 @@ if [ -f .release ] ; then
     # * perform additional sanity checks;
     # * ...
     . .release
+    rm -f .release
 fi
 
 if [ -x autogen.sh ] ; then
