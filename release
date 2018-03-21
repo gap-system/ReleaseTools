@@ -37,7 +37,7 @@ from the PackageInfo.g file, and performs the releases process.
 
 Actions
   -h,  --help                      display this help text and exit
-  -p,  --push                      also peform the final push, completing the release
+  -p,  --push                      also perform the final push, completing the release
   -f, --force                      if a release with the same name already exists: overwrite it
 
 Paths
