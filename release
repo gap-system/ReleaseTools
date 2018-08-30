@@ -374,6 +374,7 @@ cd "$TMP_DIR/$BASENAME"
 notice "Removing unnecessary files"
 rm -f .git* .hg* .cvs*
 rm -f .appveyor.yml .codecov.yml .travis.yml
+rm -f .clang-format
 
 # execute .release script, if present
 if [ -f .release ] ; then
