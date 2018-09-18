@@ -383,7 +383,7 @@ if [ -f .release ] ; then
     # * build the package manual in a custom way;
     # * perform additional sanity checks;
     # * ...
-    . .release
+    . ./.release
     rm -f .release
 fi
 
