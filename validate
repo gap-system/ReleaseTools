@@ -1,0 +1,134 @@
+#!/usr/bin/env python
+#
+# Validate a GAP package's PackageInfo.g file
+
+from __future__ import print_function
+
+import sys
+if sys.version_info < (2,7):
+    error("Python 2.7 or newer is required")
+
+import certifi
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import tempfile
+import tarfile
+import zipfile
+
+# URL retrieval
+if sys.version_info[0] == 3:
+    from urllib.request import urlretrieve
+else:
+    from urllib import urlretrieve
+
+# import errno
+# import os.path
+# import platform
+# import re
+# import argparse
+#import posixpath
+# 
+# import urlparse
+
+def notice(msg):
+    print("\033[32m" + msg + "\033[0m")
+
+def warning(msg):
+    print("\033[33m" + msg + "\033[0m")
+
+def error(msg):
+    print("\033[31m" + msg + "\033[0m")
+    exit(1)
+
+
+def sha256sum(filename):
+    hash = hashlib.sha256()
+    with open(filename, "rb") as f:
+        for block in iter(lambda: f.read(65536), b""):
+            hash.update(block)
+    return hash.hexdigest()
+# 
+# def mkdir_p(path):
+#     try:
+#         os.makedirs(path)
+#     except OSError as exc:
+#         if exc.errno != errno.EEXIST or not os.path.isdir(path):
+#             raise
+# 
+def report_progress(count, block_size, total_size):
+    percent = int(count*block_size*100/total_size)
+    percent = min(100, percent)
+    sys.stdout.write("\r%d%%" % percent)
+    sys.stdout.flush()
+
+def read_package_info(pkginfo):
+    # TODO: pass --quitonbreak if supported
+    cmd = ['gap', '-A', '-q', '-b']
+    process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    output,err = process.communicate('''
+OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;
+pkginfo:="'''+pkginfo+'''";;
+if not ValidatePackageInfo(pkginfo) then
+    Error(pkginfo, " fails validation");
+fi;
+Read(pkginfo);
+if LoadPackage("json") <> true then
+    Error("failed to load json package");
+fi;
+InstallMethod(_GapToJsonStreamInternal, [IsOutputStream, IsFunction],
+   function(o,f) PrintTo(o, "false"); end); # HACK
+GapToJsonStream(STDOut, GAPInfo.PackageInfoCurrent);
+'''.encode())
+    if process.returncode != 0:
+        print(err)
+        error('There was an error running GAP')
+
+    return json.loads(output)
+
+#            urlretrieve(url, local_path, report_progress)
+
+if __name__ == '__main__':
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+    print("Current dir: "+current_dir)
+    
+    if not os.path.isfile("PackageInfo.g"):
+        error('no PackageInfo.g found')
+
+    orig_sha256 = sha256sum("PackageInfo.g")
+    notice('sha256: '+orig_sha256);
+
+    notice('parsing PackageInfo.g...')
+    orig_pkg_data = read_package_info("PackageInfo.g")
+
+    notice('Retrieving '+orig_pkg_data["PackageInfoURL"])
+    online_pkginfo_path,_ = urlretrieve(orig_pkg_data["PackageInfoURL"])
+
+    online_sha256 = sha256sum(online_pkginfo_path)
+    notice('sha256: '+online_sha256)
+
+    # warn about checksum mismatch -- we deliberately only warn, as
+    # the user may still learn useful information from whether the
+    # online PackageInfo.g is valid or not
+    if orig_sha256 != online_sha256:
+        warning("Checksum mismatch")
+
+    notice('parsing remote PackageInfo.g...')
+    online_pkg_data = read_package_info(online_pkginfo_path)
+    
+    print(online_pkg_data)
+
+    # TODO: validate archive URLs
+
+    
+    # TODO: add more checks
+
+#     tempdir_path = tempfile.mkdtemp()
+#     try:
+#         
+#     finally:
+#         shutil.rmtree(tempdir_path)
+    
+    print('Done.')
