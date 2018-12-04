@@ -580,7 +580,7 @@ cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
 rm -rf doc/ htm/
 if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
     mkdir -p doc/
-    for ext in css html js txt ; do
+    for ext in css html js png txt ; do
         cp "$TMP_DIR/$BASENAME/doc"/*.$ext doc/
     done
 fi
