@@ -238,6 +238,9 @@ if [ x"$GAP_ERROR" != "x" ] ; then
     error "$GAP_ERROR"
 fi
 
+case "$VERSION" in
+  *dev) error "Must not use 'dev' versions for package releases" ;;
+esac
 
 ######################################################################
 #
