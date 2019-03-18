@@ -184,9 +184,7 @@ if [ ! -d "$WEB_DIR" ] ; then
 fi
 
 # Check whether GAP is usable
-if [ "x$GAP" = x ] ; then
-    GAP="gap"
-fi
+GAP=${GAP:-gap}
 command -v $GAP >/dev/null 2>&1 ||
     error "could not find GAP (perhaps set the GAP environment variable?)"
 
