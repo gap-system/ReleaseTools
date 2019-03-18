@@ -594,8 +594,8 @@ fi
 # that is a non-portable extension of POSIX, which works differently in
 # BSD and GNU make.
 for f in ./*/*.htm* ; do
-  sed 's;href="../../../doc/;href="https://www.gap-system.org/Manuals/doc/;g' $f > $f.bak
-  mv $f.bak $f
+  sed 's;href="../../../doc/;href="https://www.gap-system.org/Manuals/doc/;g' "$f" > "$f.bak"
+  mv "$f.bak" "$f"
 done
 
 $GAP -A -q <<GAPInput
