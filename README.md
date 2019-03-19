@@ -120,15 +120,19 @@ environment variable to contain the full path to your GAP executable
 2. Make sure there is a `gh-pages` subdirectory which contains an up-to-date checkout
    of the `gh-pages` branch of your repository.
    
-   Power users with a recent git version (2.7.0 or later) can also
-   use `git worktree` to create the `gh-pages` subdirectory.
+    ```
+    cd gh-pages && git pull && cd ..
+    ```
+
+   If there is no `gh-pages` directory, you need to create on as described
+   in the README of [GitHubPagesForGAP][].
 
 3. Update the version and release date in `PackageInfo.g`.
 
 4. Adjust the release date and version in your manual. Note that AutoDoc can do this
    automatically for you (please consult its manual to learn more).
 
-5. Make sure that any files containing the version and release date
+5. Make sure that all files containing the version and release date
    are updated (e.g. the manual; your `CHANGES` or `VERSION` files, etc.).
 
 6. Commit all your changes to `PackageInfo.g`, `VERSION`, documentation, etc., e.g.:
