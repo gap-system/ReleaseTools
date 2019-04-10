@@ -329,7 +329,7 @@ order of their precedence (from highest to lowest), these are:
 Please submit bug reports, suggestions for improvements and patches via
 the [issue tracker](https://github.com/gap-system/ReleaseTools/issues).
 
-You can also contact me directly via [email](max@quendi.de).
+You can also contact me directly via [email](mailto:max@quendi.de).
 
 Copyright (c) 2013-2019 Max Horn
 
