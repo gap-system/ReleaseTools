@@ -2,7 +2,10 @@
 #
 # ReleaseTools - a set of shells script for making GAP package releases
 #
-# Copyright (c) 2013-2019 Max Horn
+# Please always use the latest version of this tool, available from
+# <https://github.com/gap-system/ReleaseTools>.
+#
+# Copyright (c) 2013-2019 Max Horn <max@quendi.de>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
