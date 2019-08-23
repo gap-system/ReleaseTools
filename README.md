@@ -27,18 +27,19 @@ provided the following tools are available:
 * git
 * Python 2.6 or later
 * BSD or GNU tar (for creating `.tar.gz` and `.tar.bz2` archives)
-* zip (for creating `.zip` archives)
+* zip (for creating `.zip` archives; only needed if your `PackageInfo.g`
+  specifies it in the `ArchiveFormats` field)
 
-In addition, you also need a recent version of GAP (4.7.8 or later
+In addition, you also need a recent enough version of GAP (4.7.8 or later
 should do it). By default the `release` script assumes that there is a
 `gap` executable in your PATH. If this is not the case, or if you want
 `release` to use another GAP executable, you can do so via the `GAP`
 environment variable.
 
-For example, you could invoke `release` like this:
-```
-GAP=/home/john_smith/gap/bin/gap.sh  ../ReleaseTools/release
-```
+For example, you could invoke `release` like this, assuming the
+`ReleaseTools` directory is next to your package's directory:
+
+    GAP=/home/john_smith/gap/bin/gap.sh  ../ReleaseTools/release
 
 Your package must also be hosted on GitHub.
 
@@ -97,7 +98,19 @@ make a release.
    and copy relevant files.
 
 
-## The release process
+## The release process (short version)
+
+1. Prepare your release, commit all changes and push them
+
+2. Run `PATH/TO/ReleaseTools/release -p`
+
+3. If there was no error, you are done. Otherwise, address the error,
+   commit and push the changes, the repeat step 2 (you may need to add
+   the `--force` option, to convince `release` to re-create git tags
+   etc.)
+
+
+## The release process (extended version)
 
 Suppose we want to release version 1.2.3 of a package named `FOOBAR`.
 Suppose furthermore that directory `foo` contains a clone of the

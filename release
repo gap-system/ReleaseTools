@@ -188,7 +188,7 @@ fi
 
 # Check whether GAP is usable
 GAP=${GAP:-gap}
-command -v $GAP >/dev/null 2>&1 ||
+command -v "$GAP" >/dev/null 2>&1 ||
     error "could not find GAP (perhaps set the GAP environment variable?)"
 
 command -v curl >/dev/null 2>&1 ||
