@@ -69,20 +69,21 @@ def read_package_info(pkginfo):
     cmd = ['gap', '-A', '-q', '-b']
     process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     output,err = process.communicate('''
-OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;
-pkginfo:="'''+pkginfo+'''";;
-if not ValidatePackageInfo(pkginfo) then
-    Error(pkginfo, " fails validation");
-fi;
-Read(pkginfo);
-if LoadPackage("json") <> true then
-    Error("failed to load json package");
-fi;
-InstallMethod(_GapToJsonStreamInternal, [IsOutputStream, IsFunction],
-   function(o,f) PrintTo(o, "false"); end); # HACK
-GapToJsonStream(STDOut, GAPInfo.PackageInfoCurrent);
-'''.encode())
+        OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;
+        pkginfo:="'''+pkginfo+'''";;
+        #if not ValidatePackageInfo(pkginfo) then
+        #    Error(pkginfo, " fails validation");
+        #fi;
+        Read(pkginfo);
+        if LoadPackage("json") <> true then
+            Error("failed to load json package");
+        fi;
+        InstallMethod(_GapToJsonStreamInternal, [IsOutputStream, IsFunction],
+           function(o,f) PrintTo(o, "false"); end); # HACK
+        GapToJsonStream(STDOut, GAPInfo.PackageInfoCurrent);
+        '''.encode())
     if process.returncode != 0:
+        print(output)
         print(err)
         error('There was an error running GAP')
 
@@ -93,7 +94,10 @@ GapToJsonStream(STDOut, GAPInfo.PackageInfoCurrent);
 if __name__ == '__main__':
     current_dir = os.path.dirname(os.path.realpath(__file__))
     print("Current dir: "+current_dir)
-    
+   
+    # TODO: allow URL of a PackageInfo.g as optional command line argument
+    # (allow omitting the final '/PackageInfo.g' part); if given, just
+    # download from there, don't look for a local file
     if not os.path.isfile("PackageInfo.g"):
         error('no PackageInfo.g found')
 
@@ -116,13 +120,26 @@ if __name__ == '__main__':
         warning("Checksum mismatch")
 
     notice('parsing remote PackageInfo.g...')
-    online_pkg_data = read_package_info(online_pkginfo_path)
+    pkg_data = read_package_info(online_pkginfo_path)
     
-    print(online_pkg_data)
+    #print(pkg_data)
 
-    # TODO: validate archive URLs
+    # TODO: try to download every URL present in the meta data, check for 404s and
+    # timeouts, and report them suitably
 
-    
+    # TODO: validate archive URLs by downloading and extracing them, then parsing
+    # (and validating!) the PackageInfo.g in each of them, and comparing that in
+    # turn to the one we downloaded.
+    archive = pkg_data["ArchiveURL"]
+    formats = pkg_data["ArchiveFormats"].split()
+    for f in formats:
+        url = archive + f
+        notice('Retrieving '+url)
+        # TODO: show download progress bar
+        archive_path,_ = urlretrieve(url)
+        # TODO: extract the archive, call ValidatePackageInfo() on it
+        notice("Validating "+archive_path)
+
     # TODO: add more checks
 
 #     tempdir_path = tempfile.mkdtemp()
