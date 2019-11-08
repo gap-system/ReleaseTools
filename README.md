@@ -308,33 +308,30 @@ a so-called "personal access token". You can generate such a token as follows
    off the page, you will not be able to see the token again. You therefore
    should store it somewhere, e.g. with option 3 in the following list.
 
-There are multiple ways to tell the `release` script what your token is. In
-order of their precedence (from highest to lowest), these are:
+There are multiple ways to tell the `release` script what your token is.
+In order of their precedence from lowest to highest:
 
-1. Use the `--token` command line option:
-    ```
-    ./release --token VALUE ...
-    ```
+1. **Recommended**: Create a file `~/.github_shell_token` containing your
+   token and nothing else. If you do this, make sure this file is not readable
+   by other users, i.e., run `chmod 0600 ~/.github_shell_token`.
 
-2. Set the environment variable `TOKEN` to the token value.
-   This is mainly useful in scripts. E.g.
-    ```
-    TOKEN=VALUE ./release ...
-    ```
-
-3. Add the token to your git config, by setting `github.token`. As usual with
+2. Add the token to your git config, by setting `github.token`. As usual with
    git config entries, you can set this globally in your `~/.gitconfig` or
    locally for each clone (which can be handy if you need different tokens for
-   different projects). You can set the token via the following commands:
-    ```
-    git config github.token VALUE           # for the current project
-    git config --global github.token VALUE  # globally
-    ```
-   For details, please refer to `git help config`.
+   different projects). You can set the token via the following commands
+   (for details, please refer to `git help config`):
 
-4. Create a file `~/.github_shell_token` containing your token and nothing else.
-   If you do this, make sure this file is not readable by other users, i.e.,
-   run `chmod 0600 ~/.github_shell_token`
+        git config github.token VALUE           # for the current project
+        git config --global github.token VALUE  # globally
+
+3. Set the environment variable `TOKEN` to the token value.
+   This is mainly useful in scripts. E.g.
+
+        TOKEN=VALUE ./release ...
+
+4. Use the `--token` command line option:
+
+        ./release --token VALUE ...
 
 
 ## Contact
