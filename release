@@ -42,12 +42,12 @@ Actions
   -h,  --help                      display this help text and exit
   -p,  --push                      perform the final push, completing the release [Default]
   -P,  --no-push                   do not perform the final push
-  -f, --force                      if a release with the same name already exists: overwrite it
+  -f,  --force                     if a release with the same name already exists: overwrite it
 
 Paths
-  --srcdir <path>                  directory containing PackageInfo.g [Default: current directory]
-  --tmpdir <path>                  path to the source directory [Default: tmp subdirectory of src]
-  --webdir <path>                  path to the web directory [Default: gh-pages subdirectory of src]
+  --srcdir <path>                  path of directory containing PackageInfo.g [Default: current directory]
+  --tmpdir <path>                  path of temporary directory [Default: tmp subdirectory of srcdir]
+  --webdir <path>                  path of web directory [Default: gh-pages subdirectory of srcdir]
 
 Custom settings
   -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]

@@ -57,12 +57,12 @@ make a release.
 1. Setup [GitHubPagesForGAP][] for your package, as described in its README.
 
 2. Adjust your `PackageInfo.g` file to use GitHub. This may require adjusting
-   `PackageWWWHome`, `README_URL`, `PackageInfoURL`, `ArchiveURL`. An easy
-   way to do that is to use the following in your `PackageInfo.g`.
-   It assumes that your package name is equal to the repository name;
-   note that case matters. Also, you may have to replace "gap-packages" by
-   your username (the generated URLs must match the URL of your package's
-   repository).
+   `PackageWWWHome`, `README_URL`, `PackageInfoURL`, `ArchiveURL`. An easy way
+   to do that is to use the following in your `PackageInfo.g`. It assumes that
+   your package name is equal to the repository name; note that case matters.
+   Also, if your package repository is not hosted in the `gap-packages` GitHub
+   organization, you need to replace the string `gap-packages` in
+   `SourceRepository.URL` and `PackageWWWHome` by your GitHub username.
 
     ```
     SourceRepository := rec(
@@ -78,7 +78,7 @@ make a release.
                                      "/", ~.PackageName, "-", ~.Version ),
     ```
 
-3. Update your README, your package manual etc. to use the correct URLs.
+3. Update your README, your package manual etc. to use these URLs.
 
 4. Provide a `makedoc.g` GAP file which regenerates your package manual.
    If you are using GAPDoc, often the AutoDoc package provides an easy way
@@ -169,7 +169,7 @@ environment variable to contain the full path to your GAP executable
    In particular, test the release archives created by the previous step. If
    you are unhappy with the outcome, or for some other reason decide that you
    need more changes, do these and go back and repeat previous steps as
-   necessary (in step 8, you now need to pass "--force" to the `release` tool)
+   necessary (in step 8, you now need to pass `--force` to the `release` tool)
 
 9. Update the website:
 
@@ -193,57 +193,79 @@ detect that you made a release, and pull it into the next
 GAP package bundle.
 
 
-### The `release` script
+## The `release` script
 
 The `release` script helps you create release archives of your GAP package in a clean
 and controlled way, and publish them on GitHub.
 
 Again, we assume you are working on version 1.2.3 or package `FOOBAR`.
 
-#### Invoking the release script
+### Invoking the `release` script
 
 You normally invoke `release` as follows from inside a clone of your
 package repository:
 
-```
-PATH/TO/ReleaseTools/release
-```
+    PATH/TO/ReleaseTools/release
 
-This scans your `PackageInfo.g` for the package name and version, and
-uses that to guess the release tag.
+This scans your `PackageInfo.g` for the package name and version, and uses
+that to guess the release tag, and continues from there (see the next section
+for more details). However, several options can be passed to the `release`
+tool to adjust this process.
 
-* `-t`, `--tag`: By default, the script assumes that you tagged your release
-  with a tag named `vVERSION` (so `v1.2.3` in our example). If you prefer to
-  use other tag names, you can specify this as parameter, e.g.
+1. **Options which indicate actions:**
 
-   ```
-   PATH/TO/ReleaseTools/release --tag VER-1-2-3
-   ```
+   - `-h`, `--help`: display a brief help text and exits
 
-   Note that the `release` tool will attempt to verify your tag by checking
-   it against the `ArchiveURL` in your `PackageInfo.g`.
+   - `-p`, `--push`: Perform the very last step in the release process,
+     which is to update the website with the new release by running `git push`
+     inside the `gh-pages` directory. This is the default.
 
-* `--token`: Set the GitHub token to use. For details, refer to section "GitHub access token"
-  in this README.
+   - `-P`, `--no-push`: The reverse of `--push`: Do not push the new release
+     to the website. This gives you a chance to inspect all generated files
+     etc. before finally making the new release public.
 
-* `-r`, `--repository`: TODO
+   - `-f`, `--force`: for safety reasons, `release` will abort immediately if it
+     thinks that a release with the same version number has already been
+     made, e.g. because the tag for the release already exists. This is
+     done because the GAP package distribution strongly advices against
+     reusing the same version for different content. However, this check
+     might be wrongly triggered, e.g. because an attempt to release the
+     current version was aborted earlier due to another error. In this
+     case, you can use the `--force` option to instruct `release` to
+     disable this check.
 
-* `-p`, `--push`: Perform the very last step in the release process,
-  which is to update the website with the new release by running `git push`
-  inside the `gh-pages` directory. This is the default.
+2. **Options which adjust paths:**
 
-* `-P`, `--no-push`: The reverse of `--push`: Do not push the new release
-  to the website. This gives you a chance to inspect all generated files
-  etc. before finally making the new release public.
+   - `--srcdir <path>`: Set the path of the directory containing `PackageInfo.g` to `<path>`.
+     The default is to use the current directory.
 
-* `-f`, `--force`: TODO
+   - `--tmpdir <path>`: Set the path of the temporary directory into which the
+     archives are put before being uploaded. The default is to use the `tmp`
+     subdirectory of the `srcdir`.
 
-* `--srcdir`: TODO
-* `--webdir`: TODO
-* `--tmpdir`: TODO
+   - `--webdir <path>`: Set the path of the web directory which contains the `GitHubPagesForGAP`
+     website. The default is to use the `gh-pages` subdirectory of the `srcdir`.
+
+3. **Custom settings:**
+
+   - `-t`, `--tag`: By default, the script assumes that you tagged your release
+     with a tag named `vVERSION` (so `v1.2.3` in our example). If you prefer to
+     use other tag names, you can specify this as parameter, e.g.
+
+      ```
+      PATH/TO/ReleaseTools/release --tag VER-1-2-3
+      ```
+
+      Note that the `release` tool will attempt to verify your tag by checking
+      it against the `ArchiveURL` in your `PackageInfo.g`.
+
+   - `r`, `--repository`: TODO
+
+   - `--token`: Set the GitHub token to use. For details, refer to section "GitHub access token"
+     in this README.
 
 
-#### What it does
+### What the `release` script does
 
 The `release` script does multiple things for you:
 
