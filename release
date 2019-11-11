@@ -40,7 +40,8 @@ from the PackageInfo.g file, and performs the releases process.
 
 Actions
   -h,  --help                      display this help text and exit
-  -p,  --push                      also perform the final push, completing the release
+  -p,  --push                      perform the final push, completing the release [Default]
+  -P,  --no-push                   do not perform the final push
   -f, --force                      if a release with the same name already exists: overwrite it
 
 Paths
@@ -134,7 +135,7 @@ TMP_DIR="$PWD/tmp"
 PackageInfoURL=
 README_URL=
 
-PUSH=no
+PUSH=yes
 FORCE=no
 ONLY_TARBALL=no
 while [ x"$1" != x ]; do
@@ -155,7 +156,7 @@ while [ x"$1" != x ]; do
     --token ) TOKEN="$1"; shift ;;
 
     -p | --push ) PUSH=yes ;;
-    --no-push ) PUSH=no ;;
+    -P | --no-push ) PUSH=no ;;
 
     -f | --force ) FORCE=yes ;;
     --no-force ) FORCE=no ;;

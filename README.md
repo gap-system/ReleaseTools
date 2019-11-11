@@ -102,10 +102,10 @@ make a release.
 
 1. Prepare your release, commit all changes and push them
 
-2. Run `PATH/TO/ReleaseTools/release -p`
+2. Run `PATH/TO/ReleaseTools/release`
 
 3. If there was no error, you are done. Otherwise, address the error,
-   commit and push the changes, the repeat step 2 (you may need to add
+   commit and push the changes, then repeat step 2 (you may need to add
    the `--force` option, to convince `release` to re-create git tags
    etc.)
 
@@ -157,7 +157,7 @@ environment variable to contain the full path to your GAP executable
 7. Create the release using the `release` script included here:
 
     ```
-    PATH/TO/ReleaseTools/release
+    PATH/TO/ReleaseTools/release --no-push
     ```
 
    If this does not work, please refer to the section discussing `release`.
@@ -177,8 +177,9 @@ environment variable to contain the full path to your GAP executable
     cd gh-pages && git push
     ```
 
-    Note that `release` will also do this for you if you call it with
-    the `--push` option.
+    Note that `release` will also do this for you if you omit the `--no-push`
+    option; once you are familiar with this tool, and confident everything
+    worked fine, you may want to always do it that way.
 
 
 That's it. You should now be able to see the new version on
@@ -227,7 +228,13 @@ uses that to guess the release tag.
 
 * `-r`, `--repository`: TODO
 
-* `-p`, `--push`: TODO
+* `-p`, `--push`: Perform the very last step in the release process,
+  which is to update the website with the new release by running `git push`
+  inside the `gh-pages` directory. This is the default.
+
+* `-P`, `--no-push`: The reverse of `--push`: Do not push the new release
+  to the website. This gives you a chance to inspect all generated files
+  etc. before finally making the new release public.
 
 * `-f`, `--force`: TODO
 
