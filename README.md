@@ -248,19 +248,6 @@ tool to adjust this process.
 
 3. **Custom settings:**
 
-   - `-t`, `--tag`: By default, the script assumes that you tagged your release
-     with a tag named `vVERSION` (so `v1.2.3` in our example). If you prefer to
-     use other tag names, you can specify this as parameter, e.g.
-
-      ```
-      PATH/TO/ReleaseTools/release --tag VER-1-2-3
-      ```
-
-      Note that the `release` tool will attempt to verify your tag by checking
-      it against the `ArchiveURL` in your `PackageInfo.g`.
-
-   - `r`, `--repository`: TODO
-
    - `--token`: Set the GitHub token to use. For details, refer to section "GitHub access token"
      in this README.
 

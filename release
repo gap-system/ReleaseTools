@@ -50,8 +50,6 @@ Paths
   --webdir <path>                  path of web directory [Default: gh-pages subdirectory of srcdir]
 
 Custom settings
-  -t,  --tag <tag>                 git tag for the release [Default: vVERSION, e.g. v1.2.3]
-  -r,  --repository <repository>   set GitHub repository (as USERNAME/PKGNAME)
   --token <oauth>                  GitHub access token
 
 Notes:
@@ -151,8 +149,6 @@ while [ x"$1" != x ]; do
     --webdir=*) WEB_DIR=${option#--webdir=}; shift ;;
     --tmpdir=*) TMP_DIR=${option#--tmpdir=}; shift ;;
 
-    -t | --tag ) TAG="$1"; shift ;;
-    -r | --repository ) REPO="$1"; shift ;;
     --token ) TOKEN="$1"; shift ;;
 
     -p | --push ) PUSH=yes ;;
@@ -222,7 +218,7 @@ Print("ARCHIVE_FORMATS=\"",tmp,"\"\n");
 tmp := SplitString(GAPInfo.PackageInfoCurrent.ArchiveURL, "/");;
 if Length(tmp) = 9 and tmp{[1,2,3,6,7]} = ["https:","","github.com","releases","download"] then
     Print("REPO=\"",Concatenation(tmp[4],"/",tmp[5]),"\"\n");
-    Print("GAP_TAG=\"",tmp[8],"\"\n");
+    Print("TAG=\"",tmp[8],"\"\n");
     len := Length(tmp[9]) - Length(GAPInfo.PackageInfoCurrent.Version);
     if len > 0 then
         Print("BASENAME=\"",tmp[9]{[1..len]},"\"\n");
@@ -301,9 +297,6 @@ fi
 #
 # Determine GitHub repository and username, and the current branch
 #
-if [ x"$REPO" = "x" ] ; then
-    error "could not guess GitHub repository"
-fi
 notice "Using GitHub repository $REPO"
 
 GITHUB_USER=$(dirname "$REPO")
@@ -327,18 +320,8 @@ UPLOAD_URL=https://uploads.github.com/repos/$REPO/releases
 #
 verify_git_clean
 
-if [ x"$TAG" = "x" ] ; then
-    if [ x"$GAP_TAG" = "x" ] ; then
-        TAG=v$VERSION
-    else
-        TAG=$GAP_TAG
-    fi
-fi
-if [ "$TAG" != "$GAP_TAG" ] ; then
-    error "given tag $TAG does not match tag $GAP_TAG found in PackageInfo.g"
-fi
 if git show-ref -q "$TAG" ; then
-    notice "Using git tag $TAG"
+    notice "Using git tag $TAG (derived from ArchiveURL in in PackageInfo.g)"
 else
     notice "Creating git tag $TAG"
     git tag "$TAG"
