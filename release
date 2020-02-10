@@ -465,7 +465,7 @@ fi
 #
 
 # check if release already exists
-response=$(curl -s -S -X GET "$API_URL/tags/$TAG?access_token=$TOKEN")
+response=$(curl -s -S -X GET "$API_URL/tags/$TAG" -H "Authorization: token $TOKEN")
 MESSAGE=$(json_get_key message)
 RELEASE_ID=$(json_get_key id)
 
@@ -475,7 +475,7 @@ elif [ x"$RELEASE_ID" != x ] ; then
     # release already exists -> error out or delete it
     if [ "x$FORCE" = xyes ] ; then
         notice "Deleting existing release $TAG from GitHub"
-        response=$(curl --fail -s -S -X DELETE "$API_URL/$RELEASE_ID?access_token=$TOKEN")
+        response=$(curl --fail -s -S -X DELETE "$API_URL/$RELEASE_ID" -H "Authorization: token $TOKEN")
         MESSAGE=
     else
         error "release $TAG already exists on GitHub, aborting (use --force to override this)"
@@ -500,7 +500,7 @@ EOF
 
 notice "Creating new release $TAG on GitHub"
 response=$(curl -s -S -H "Content-Type: application/json" \
- -X POST --data "$DATA" "$API_URL?access_token=$TOKEN")
+ -X POST --data "$DATA" "$API_URL" -H "Authorization: token $TOKEN")
 
 MESSAGE=$(json_get_key message)
 if [ x"$MESSAGE" != x ] ; then
