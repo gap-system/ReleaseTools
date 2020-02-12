@@ -430,6 +430,31 @@ README_NAME=$(basename "$README_URL")
 
 ######################################################################
 #
+# Create all archive files requested by ARCHIVE_FORMATS
+#
+cd "$TMP_DIR"
+echo ""
+for EXT in $ARCHIVE_FORMATS ; do
+    ARCHIVENAME=$BASENAME$EXT
+    FULLNAME="$TMP_DIR/$ARCHIVENAME"
+    notice "Creating $ARCHIVENAME ..."
+    case $EXT in
+    .tar.gz)  tar cf - "$BASENAME" | gzip -9c > "$ARCHIVENAME" ;;
+    .tar.bz2) tar cf - "$BASENAME" | bzip2 -9c > "$ARCHIVENAME" ;;
+    .zip)     zip -r9 --quiet "$ARCHIVENAME" "$BASENAME" ;;
+    *)
+        warning "unsupported archive format $EXT"
+        continue
+        ;;
+    esac
+    if [ ! -f "$FULLNAME" ] ; then
+        error "failed creating $FULLNAME"
+    fi
+done
+
+
+######################################################################
+#
 # Abort early if user requested only creation of tarballs
 #
 if [ "x$ONLY_TARBALL" = xyes ] ; then
@@ -514,31 +539,18 @@ fi
 
 ######################################################################
 #
-# Create and upload all requested archive files (as per ARCHIVE_FORMATS)
+# Upload all archive files requested by ARCHIVE_FORMATS
 #
 cd "$TMP_DIR"
 echo ""
 for EXT in $ARCHIVE_FORMATS ; do
     ARCHIVENAME=$BASENAME$EXT
     FULLNAME="$TMP_DIR/$ARCHIVENAME"
-    notice "Creating $ARCHIVENAME ..."
     case $EXT in
-    .tar.gz)
-        tar cf - "$BASENAME" | gzip -9c > "$ARCHIVENAME"
-        MIMETYPE="application/x-gzip"
-        ;;
-    .tar.bz2)
-        tar cf - "$BASENAME" | bzip2 -9c > "$ARCHIVENAME"
-        MIMETYPE="application/x-bzip2"
-        ;;
-    .zip)
-        zip -r9 --quiet "$ARCHIVENAME" "$BASENAME"
-        MIMETYPE="application/zip"
-        ;;
-    *)
-        warning "unsupported archive format $EXT"
-        continue
-        ;;
+    .tar.gz)  MIMETYPE="application/x-gzip" ;;
+    .tar.bz2) MIMETYPE="application/x-bzip2" ;;
+    .zip)     MIMETYPE="application/zip" ;;
+    *)        continue ;;
     esac
     if [ ! -f "$FULLNAME" ] ; then
         error "failed creating $FULLNAME"
