@@ -50,6 +50,15 @@ def sha256sum(filename):
         for block in iter(lambda: f.read(65536), b""):
             hash.update(block)
     return hash.hexdigest()
+
+# TODO:
+# * check that GAP is available
+# * run `gap -h` once to see it starts
+# *  also, determine from that if --nointeract resp. --quitonbreak resp. --norepl are supported
+# *  check/fix how --quitonbreak interacts with -T / --nobreakloop
+gap_supports_nointeract = False
+gap_supports_quitonbreak = False
+
 # 
 # def mkdir_p(path):
 #     try:
@@ -66,6 +75,7 @@ def report_progress(count, block_size, total_size):
 
 def read_package_info(pkginfo):
     # TODO: pass --quitonbreak if supported
+    # TODO: pass --nointeract ? etc.
     cmd = ['gap', '-A', '-q', '-b']
     process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     output,err = process.communicate('''
@@ -97,7 +107,9 @@ if __name__ == '__main__':
    
     # TODO: allow URL of a PackageInfo.g as optional command line argument
     # (allow omitting the final '/PackageInfo.g' part); if given, just
-    # download from there, don't look for a local file
+    # download from there, don't look for a local file;
+    #   OR the path to a PackageInfo.g file
+
     if not os.path.isfile("PackageInfo.g"):
         error('no PackageInfo.g found')
 
@@ -140,8 +152,12 @@ if __name__ == '__main__':
         # TODO: extract the archive, call ValidatePackageInfo() on it
         notice("Validating "+archive_path)
 
-    # TODO: add more checks
-
+    # TODO: add more checks:
+    # - check PackageDoc entries
+    # - check PackageWWWHome, README_URL, IssueTrackerURL, ArchiveURL
+    # - download the various archives, extract them, check content
+    # - check for bad absolute paths in HTML files
+    
 #     tempdir_path = tempfile.mkdtemp()
 #     try:
 #         
