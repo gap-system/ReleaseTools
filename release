@@ -88,9 +88,8 @@ error() {
 
 # check for uncommitted changes
 verify_git_clean() {
-    git update-index --refresh
-    git diff-index --quiet HEAD -- ||
-        error "uncommitted changes detected"
+    git update-index --refresh || error "uncommitted changes detected"
+    git diff-index --quiet HEAD -- || error "uncommitted changes detected"
 }
 
 # execute GAP commands from a heredoc, and export its output in the shell
