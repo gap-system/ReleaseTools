@@ -303,7 +303,7 @@ GITHUB_USER=$(dirname "$REPO")
 notice "Using GitHub username $GITHUB_USER"
 
 BRANCH=$(git symbolic-ref -q --short HEAD)
-notice "Publishing on branch $BRANCH"
+notice "Using branch $BRANCH"
 
 
 ######################################################################
