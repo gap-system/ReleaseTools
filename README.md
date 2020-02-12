@@ -20,7 +20,7 @@ pages for the package homepage.
 
 ## Requirements
 
-The `release` script should run on any POSIX compatible system,
+The `release-gap-package` script should run on any POSIX compatible system,
 provided the following tools are available:
 
 * [curl](https://curl.haxx.se/)
@@ -31,15 +31,15 @@ provided the following tools are available:
   specifies it in the `ArchiveFormats` field)
 
 In addition, you also need a recent enough version of GAP (4.7.8 or later
-should do it). By default the `release` script assumes that there is a
+should do it). By default the `release-gap-package` script assumes that there is a
 `gap` executable in your PATH. If this is not the case, or if you want
-`release` to use another GAP executable, you can do so via the `GAP`
+`release-gap-package` to use another GAP executable, you can do so via the `GAP`
 environment variable.
 
-For example, you could invoke `release` like this, assuming the
+For example, you could invoke `release-gap-package` like this, assuming the
 `ReleaseTools` directory is next to your package's directory:
 
-    GAP=/home/john_smith/gap/bin/gap.sh  ../ReleaseTools/release
+    GAP=/home/john_smith/gap/bin/gap.sh  ../ReleaseTools/release-gap-package
 
 Your package must also be hosted on GitHub.
 
@@ -102,11 +102,11 @@ make a release.
 
 1. Prepare your release, commit all changes and push them
 
-2. Run `PATH/TO/ReleaseTools/release`
+2. Run `PATH/TO/ReleaseTools/release-gap-package`
 
 3. If there was no error, you are done. Otherwise, address the error,
    commit and push the changes, then repeat step 2 (you may need to add
-   the `--force` option, to convince `release` to re-create git tags
+   the `--force` option, to convince `release-gap-package` to re-create git tags
    etc.)
 
 
@@ -118,8 +118,9 @@ repository.
 
 In order to make a release, you can follow the steps below. Note that this
 assumes that `gap` is in your PATH, i.e. it can be invoked by just entering
-`gap`. Alternatively, before running the `release` tool you can set the `GAP`
-environment variable to contain the full path to your GAP executable
+`gap`. Alternatively, before running the `release-gap-package` tool you can
+set the `GAP` environment variable to contain the full path to your GAP
+executable.
 
 1. Make sure we are on the right branch and have the latest version.
 
@@ -154,10 +155,10 @@ environment variable to contain the full path to your GAP executable
    git commit --all -m "Version 1.2.3"
    ```
 
-7. Create the release using the `release` script included here:
+7. Create the release using the `release-gap-package` script included here:
 
     ```
-    PATH/TO/ReleaseTools/release --no-push
+    PATH/TO/ReleaseTools/release-gap-package --no-push
     ```
 
    If this does not work, please refer to the section discussing `release`.
@@ -169,7 +170,8 @@ environment variable to contain the full path to your GAP executable
    In particular, test the release archives created by the previous step. If
    you are unhappy with the outcome, or for some other reason decide that you
    need more changes, do these and go back and repeat previous steps as
-   necessary (in step 8, you now need to pass `--force` to the `release` tool)
+   necessary (in step 8, you now need to pass `--force` to the
+   `release-gap-package` tool)
 
 9. Update the website:
 
@@ -177,9 +179,9 @@ environment variable to contain the full path to your GAP executable
     cd gh-pages && git push
     ```
 
-    Note that `release` will also do this for you if you omit the `--no-push`
-    option; once you are familiar with this tool, and confident everything
-    worked fine, you may want to always do it that way.
+    Note that `release-gap-package` will also do this for you if you omit the
+    `--no-push` option; once you are familiar with this tool, and confident
+    everything worked fine, you may want to always do it that way.
 
 
 That's it. You should now be able to see the new version on
@@ -193,24 +195,24 @@ detect that you made a release, and pull it into the next
 GAP package bundle.
 
 
-## The `release` script
+## The `release-gap-package` script
 
-The `release` script helps you create release archives of your GAP package in a clean
-and controlled way, and publish them on GitHub.
+The `release-gap-package` script helps you create release archives of your GAP
+package in a clean and controlled way, and publish them on GitHub.
 
 Again, we assume you are working on version 1.2.3 or package `FOOBAR`.
 
-### Invoking the `release` script
+### Invoking the `release-gap-package` script
 
-You normally invoke `release` as follows from inside a clone of your
+You normally invoke `release-gap-package` as follows from inside a clone of your
 package repository:
 
-    PATH/TO/ReleaseTools/release
+    PATH/TO/ReleaseTools/release-gap-package
 
 This scans your `PackageInfo.g` for the package name and version, and uses
 that to guess the release tag, and continues from there (see the next section
-for more details). However, several options can be passed to the `release`
-tool to adjust this process.
+for more details). However, several options can be passed to the
+`release-gap-package` tool to adjust this process.
 
 1. **Options which indicate actions:**
 
@@ -224,15 +226,14 @@ tool to adjust this process.
      to the website. This gives you a chance to inspect all generated files
      etc. before finally making the new release public.
 
-   - `-f`, `--force`: for safety reasons, `release` will abort immediately if it
-     thinks that a release with the same version number has already been
-     made, e.g. because the tag for the release already exists. This is
-     done because the GAP package distribution strongly advices against
-     reusing the same version for different content. However, this check
-     might be wrongly triggered, e.g. because an attempt to release the
-     current version was aborted earlier due to another error. In this
-     case, you can use the `--force` option to instruct `release` to
-     disable this check.
+   - `-f`, `--force`: for safety reasons, `release-gap-package` will abort
+   immediately if it thinks that a release with the same version number has
+   already been made, e.g. because the tag for the release already exists.
+   This is done because the GAP package distribution strongly advices against
+   reusing the same version for different content. However, this check might
+   be wrongly triggered, e.g. because an attempt to release the current
+   version was aborted earlier due to another error. In this case, you can use
+   the `--force` option to instruct `release-gap-package` to disable this check.
 
 2. **Options which adjust paths:**
 
@@ -252,9 +253,9 @@ tool to adjust this process.
      in this README.
 
 
-### What the `release` script does
+### What the `release-gap-package` script does
 
-The `release` script does multiple things for you:
+The `release-gap-package` script does multiple things for you:
 
 1. It creates archive files in a subdirectory `tmp` of the current directory.
    For now, it knows how to create `.tar.gz`, `.tar.bz2` and `.zip` files.
@@ -276,7 +277,7 @@ The `release` script does multiple things for you:
 
    then you can achieve this by editing your  `PackageInfo.g`.
 
-   To create these archives, `release` uses `git archive`
+   To create these archives, `release-gap-package` uses `git archive`
    to export precisely the files in your repository present in the commit
    tagged `v1.2.3`. This ensures
    that *only* files that are present in your repository will be added,
@@ -306,10 +307,10 @@ The `release` script does multiple things for you:
 
 ## GitHub access token
 
-The `release` script needs limited write access to your repository in
-order to upload the release archives for you. In order to do this,
-the scripts needs to authenticate itself with GitHub, for which it needs
-a so-called "personal access token". You can generate such a token as follows
+The `release-gap-package` script needs limited write access to your repository
+in order to upload the release archives for you. In order to do this, the
+scripts needs to authenticate itself with GitHub, for which it needs a
+so-called "personal access token". You can generate such a token as follows
 (see also <https://help.github.com/articles/creating-an-access-token-for-command-line-use>).
 
 1. Go to <https://github.com/settings/tokens>.
@@ -324,7 +325,7 @@ a so-called "personal access token". You can generate such a token as follows
    off the page, you will not be able to see the token again. You therefore
    should store it somewhere, e.g. with option 3 in the following list.
 
-There are multiple ways to tell the `release` script what your token is.
+There are multiple ways to tell the `release-gap-package` script what your token is.
 In order of their precedence from lowest to highest:
 
 1. **Recommended**: Create a file `~/.github_shell_token` containing your
@@ -343,11 +344,11 @@ In order of their precedence from lowest to highest:
 3. Set the environment variable `TOKEN` to the token value.
    This is mainly useful in scripts. E.g.
 
-        TOKEN=VALUE ./release ...
+        TOKEN=VALUE ./release-gap-package ...
 
 4. Use the `--token` command line option:
 
-        ./release --token VALUE ...
+        ./release-gap-package --token VALUE ...
 
 
 ## Contact
