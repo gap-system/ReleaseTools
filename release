@@ -207,6 +207,8 @@ run_gap <<EOF
 Read("PackageInfo.g");
 Print("PKG=\"",GAPInfo.PackageInfoCurrent.PackageName,"\"\n");
 Print("VERSION=\"",GAPInfo.PackageInfoCurrent.Version,"\"\n");
+tmp:=GAPInfo.PackageInfoCurrent.Date;; # either YYYY-MM-DD or DD/MM/YYYY format
+Print("DATE=\"",tmp,"\"\n");
 Print("PackageInfoURL=\"",GAPInfo.PackageInfoCurrent.PackageInfoURL,"\"\n");
 Print("README_URL=\"",GAPInfo.PackageInfoCurrent.README_URL,"\"\n");
 # extract archive formats; these can be comma or space separated, we want
