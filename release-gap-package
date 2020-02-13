@@ -111,7 +111,7 @@ run_gap() {
 }
 
 # helper function for parsing GitHub's JSON output. Right now,
-# we only extra the value of a single key at a time. This means
+# we only extract the value of a single key at a time. This means
 # we may end up parsing the same JSON data two times, but that
 # doesn't really matter as it is tiny.
 json_get_key() {
@@ -469,7 +469,7 @@ fi
 
 cd "$SRC_DIR"
 
-# construct GitHub URL for pusing
+# construct GitHub URL for pushing
 REMOTE="https://$GITHUB_USER:$TOKEN@github.com/$REPO"
 
 # Make sure the branch is on the server
