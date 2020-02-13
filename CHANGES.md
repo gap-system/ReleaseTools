@@ -1,5 +1,9 @@
 This file describes changes in the **ReleaseTools** for GAP packages.
 
+Note: only changes in the script visible to the user are mentioned; internal
+changes and also improvements to the `README.md` are not covered.
+
+
 - 2020-02-12:
   - Rename the `release` script to `release-gap-package` to make it
     convenient for use in your PATH
