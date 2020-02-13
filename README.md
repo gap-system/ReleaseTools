@@ -170,7 +170,7 @@ executable.
    In particular, test the release archives created by the previous step. If
    you are unhappy with the outcome, or for some other reason decide that you
    need more changes, do these and go back and repeat previous steps as
-   necessary (in step 8, you now need to pass `--force` to the
+   necessary (in step 7, you now need to pass `--force` to the
    `release-gap-package` tool)
 
 9. Update the website:
