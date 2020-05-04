@@ -17,6 +17,9 @@ These tools are focused on making releases for packages hosted on
 GitHub, and which are using the GitHub release system as well as GitHub
 pages for the package homepage.
 
+Please try to always use the latest version of this tool. You can
+obtain it from <https://github.com/gap-system/ReleaseTools>.
+
 
 ## Requirements
 
@@ -100,6 +103,9 @@ make a release.
 
 ## The release process (short version)
 
+The following assumes that you have the latest version of the `release-gap-package`
+script from <https://github.com/gap-system/ReleaseTools> on your computer.
+
 1. Prepare your release, commit all changes and push them
 
 2. Run `PATH/TO/ReleaseTools/release-gap-package`
@@ -111,6 +117,9 @@ make a release.
 
 
 ## The release process (extended version)
+
+The following assumes that you have the latest version of the `release-gap-package`
+script from <https://github.com/gap-system/ReleaseTools> on your computer.
 
 Suppose we want to release version 1.2.3 of a package named `FOOBAR`.
 Suppose furthermore that directory `foo` contains a clone of the
