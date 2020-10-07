@@ -605,7 +605,7 @@ git commit -m "Update website for $PKG $VERSION"
 
 if [ "x$PUSH" = xyes ] ; then
     notice "Pushing website changes"
-    git push
+    git push "$REMOTE"
     notice "Done"
     notice "Your PackageInfo.g is now at $PackageInfoURL"
 else
