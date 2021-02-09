@@ -360,7 +360,8 @@ git archive --prefix="$BASENAME/" "$TAG" . | tar xf - -C "$TMP_DIR"
 cd "$TMP_DIR/$BASENAME"
 
 notice "Removing unnecessary files"
-rm -f .git* .hg* .cvs*
+# Remove recursively in case there is a .github directory
+rm -rf .git* .hg* .cvs*
 rm -f .appveyor.yml .codecov.yml .travis.yml
 
 # execute .release script, if present
