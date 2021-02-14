@@ -410,7 +410,7 @@ cd "$TMP_DIR/$BASENAME"
 
 notice "Removing unnecessary files"
 # Remove recursively in case there is a .github directory
-rm -rf .git* .hg* .cvs*
+rm -rf .git* .hg* .cvs* .circleci
 rm -f .appveyor.yml .codecov.yml .travis.yml
 
 # execute .release script, if present
