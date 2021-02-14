@@ -245,6 +245,7 @@ else
     tmp := GAPInfo.PackageInfoCurrent.ArchiveURL;
     Print("GAP_ERROR=\"The ArchiveURL has unexpected value '",tmp,"'\"\n");
 fi;
+Print("PDFFile=\"",GAPInfo.PackageInfoCurrent.PackageDoc.PDFFile,"\"\n");
 EOF
 
 # evaluate the output of GAP, which should be valid shell script code
@@ -592,6 +593,26 @@ for EXT in $ARCHIVE_FORMATS ; do
         -H "Content-Type: $MIMETYPE" \
         --data-binary @"$FULLNAME")
 done
+
+
+######################################################################
+#
+# Upload PDF
+#
+cd "$TMP_DIR"
+echo ""
+
+FULLNAME="$TMP_DIR/$BASENAME/$PDFFile"
+if [ ! -f "$FULLNAME" ] ; then
+	error "could not find PDF"
+fi
+notice "Uploading PDF"
+response=$(curl --fail --progress-bar -o "$TMP_DIR/upload_pdf.log" \
+	-X POST "$UPLOAD_URL/$RELEASE_ID/assets?name=$BASENAME.pdf" \
+	-H "Accept: application/vnd.github.v3+json" \
+	-H "Authorization: token $TOKEN" \
+	-H "Content-Type: application/pdf" \
+	--data-binary @"$FULLNAME")
 
 
 ######################################################################
