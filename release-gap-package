@@ -172,6 +172,8 @@ done
 # Some initial sanity checks
 #
 
+cd "$SRC_DIR"
+
 if [ ! -f PackageInfo.g ] ; then
     error "unable to read PackageInfo.g file, use --help for instructions"
 fi
