@@ -48,6 +48,7 @@ Paths
   --srcdir <path>                  path of directory containing PackageInfo.g [Default: current directory]
   --tmpdir <path>                  path of temporary directory [Default: tmp subdirectory of srcdir]
   --webdir <path>                  path of web directory [Default: gh-pages subdirectory of srcdir]
+  --update-file <file>             path of the update.g file [Default: update.g in webdir]
 
 Custom settings
   --token <oauth>                  GitHub access token
@@ -143,10 +144,12 @@ while [ x"$1" != x ]; do
     --srcdir ) SRC_DIR="$1"; shift ;;
     --webdir ) WEB_DIR="$1"; shift ;;
     --tmpdir ) TMP_DIR="$1"; shift ;;
+    --update-file ) UPDATE_FILE="$1"; shift ;;
 
     --srcdir=*) SRC_DIR=${option#--srcdir=}; shift ;;
     --webdir=*) WEB_DIR=${option#--webdir=}; shift ;;
     --tmpdir=*) TMP_DIR=${option#--tmpdir=}; shift ;;
+    --update-file=*) UPDATE_FILE=${option#--update-file=}; shift ;;
 
     --token ) TOKEN="$1"; shift ;;
 
@@ -179,6 +182,14 @@ if [ "x$WEB_DIR" = x ] ; then
 fi
 if [ ! -d "$WEB_DIR" ] ; then
     error "could not find 'webdir' with clone of your gh-pages branch"
+fi
+
+# Check for presence of update.g file
+if [ "x$UPDATE_FILE" = x ] ; then
+    UPDATE_FILE="$WEB_DIR/update.g"
+fi
+if [ ! -f "$UPDATE_FILE" ] ; then
+    error "could not find update.g file"
 fi
 
 # Check whether GAP is usable
@@ -598,7 +609,7 @@ for f in ./*/*.htm* ; do
 done
 
 run_gap <<GAPInput
-Read("update.g");
+Read("$UPDATE_FILE");
 GAPInput
 
 git add -A .
