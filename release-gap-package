@@ -195,7 +195,7 @@ if [ "x$UPDATE_FILE" = x ] ; then
     UPDATE_FILE="$WEB_DIR/update.g"
 fi
 if [ ! -f "$UPDATE_FILE" ] ; then
-    error "could not find update.g file"
+    error "could not find update file \"${UPDATE_FILE}\""
 fi
 
 # Check whether GAP is usable
