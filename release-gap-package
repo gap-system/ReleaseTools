@@ -544,7 +544,7 @@ fi
 DATA=$(cat <<EOF
 {
   "tag_name": "$TAG",
-  "name": "$VERSION",
+  "name": "$PKG $VERSION",
   "body": "Release for $PKG",
   "draft": false,
   "prerelease": false
