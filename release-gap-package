@@ -391,7 +391,7 @@ fi;
 PushOptions(rec(relativePath:="../../.."));
 Read("makedoc.g");
 GAPInput
-    rm -f doc/*.lab doc/*.tex
+    rm -f doc/*.tex
     rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
 elif [ -f doc/make_doc ] ; then
     notice "Copying GAP package documentation for archives (using doc/make_doc)"
