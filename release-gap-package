@@ -412,7 +412,8 @@ cd "$TMP_DIR/$BASENAME"
 notice "Removing unnecessary files"
 # Remove recursively in case there is a .github directory
 rm -rf .git* .hg* .cvs* .circleci
-rm -f .appveyor.yml .codecov.yml .travis.yml
+rm -f .appveyor.yml .codecov.yml .travis.yml azure-pipelines.yml
+find . -name .DS_Store -exec rm -f {} +
 
 # execute .release script, if present
 if [ -f .release ] ; then
