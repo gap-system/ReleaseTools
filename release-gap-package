@@ -268,11 +268,14 @@ esac
 if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation (using makedoc.g)"
     run_gap <<GAPInput
+LogTo("makedoc.log");
 if not IsPackageMarkedForLoading("$PKG", "") then
   SetPackagePath("$PKG", ".");
 fi;
 Read("makedoc.g");
 GAPInput
+    ! grep -E "WARNING: non resolved reference" makedoc.log >/dev/null 2>&1 || error "non resolved reference(s) found in the manual"
+    rm -f makedoc.log
 elif [ -f doc/make_doc ] ; then
     notice "Building GAP package documentation (using doc/make_doc)"
     cd doc && ./make_doc && cd ..
@@ -417,12 +420,15 @@ cd "$TMP_DIR/$BASENAME"
 if [ -f makedoc.g ] ; then
     notice "Building GAP package documentation for archives (using makedoc.g)"
     run_gap <<GAPInput
+LogTo("makedoc.log");
 if not IsPackageMarkedForLoading("$PKG", "") then
   SetPackagePath("$PKG", ".");
 fi;
 PushOptions(rec(relativePath:="../../.."));
 Read("makedoc.g");
 GAPInput
+    ! grep -E "WARNING: non resolved reference" makedoc.log >/dev/null 2>&1 || error "non resolved reference(s) found in the manual"
+    rm -f makedoc.log
     rm -f doc/*.tex
     rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
 elif [ -f doc/make_doc ] ; then
