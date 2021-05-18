@@ -637,12 +637,15 @@ if [ -d "$TMP_DIR/$BASENAME/htm" ] ; then
     cp -r "$TMP_DIR/$BASENAME/htm" .
 fi
 
-# adjust links to the GAP manuals
+# adjust links to the GAP manuals and to the GAPDoc manuals.
 # Note that we cannot use sed's `-i` option for in-place editing, as
 # that is a non-portable extension of POSIX, which works differently in
 # BSD and GNU make.
 for f in ./*/*.htm* ; do
-  sed 's;href="../../../doc/;href="https://www.gap-system.org/Manuals/doc/;g' "$f" > "$f.bak"
+  sed \
+    -e 's;href="../../../doc/;href="https://www.gap-system.org/Manuals/doc/;g' \
+    -e 's;href="../../../pkg/GAPDoc[^\/]*/doc/;href="http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc/doc/;gi' \
+    "$f" > "$f.bak"
   mv "$f.bak" "$f"
 done
 
