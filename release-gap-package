@@ -409,6 +409,24 @@ git archive --prefix="$BASENAME/" "$TAG" . | tar xf - -C "$TMP_DIR"
 # Build the package documentation, run autoconf, etc.
 cd "$TMP_DIR/$BASENAME"
 
+if [ -f makedoc.g ] ; then
+    notice "Building GAP package documentation for archives (using makedoc.g)"
+    run_gap <<GAPInput
+if not IsPackageMarkedForLoading("$PKG", "") then
+  SetPackagePath("$PKG", ".");
+fi;
+PushOptions(rec(relativePath:="../../.."));
+Read("makedoc.g");
+GAPInput
+    rm -f doc/*.tex
+    rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
+elif [ -f doc/make_doc ] ; then
+    notice "Copying GAP package documentation for archives (using doc/make_doc)"
+    cp -r "$SRC_DIR/doc" .
+    cp -r "$SRC_DIR/htm" .
+    rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
+fi
+
 notice "Removing unnecessary files"
 # Remove recursively in case there is a .github directory
 rm -rf .git* .hg* .cvs* .circleci
@@ -431,24 +449,6 @@ if [ -x autogen.sh ] ; then
     notice "Generating build system files"
     sh autogen.sh
     rm -rf autom4te.cache
-fi
-
-if [ -f makedoc.g ] ; then
-    notice "Building GAP package documentation for archives (using makedoc.g)"
-    run_gap <<GAPInput
-if not IsPackageMarkedForLoading("$PKG", "") then
-  SetPackagePath("$PKG", ".");
-fi;
-PushOptions(rec(relativePath:="../../.."));
-Read("makedoc.g");
-GAPInput
-    rm -f doc/*.tex
-    rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
-elif [ -f doc/make_doc ] ; then
-    notice "Copying GAP package documentation for archives (using doc/make_doc)"
-    cp -r "$SRC_DIR/doc" .
-    cp -r "$SRC_DIR/htm" .
-    rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
 fi
 
 # make sure every file is readable
