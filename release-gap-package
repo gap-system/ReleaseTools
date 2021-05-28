@@ -318,7 +318,12 @@ fi
 #
 notice "Using GitHub repository $REPO"
 
-GITHUB_USER=$(dirname "$REPO")
+if [ "x$GITHUB_USER" = x ] ; then
+    GITHUB_USER=$(git config --get github.user || echo)
+fi
+if [ "x$GITHUB_USER" = x ] ; then
+    GITHUB_USER=$(dirname "$REPO")
+fi
 notice "Using GitHub username $GITHUB_USER"
 
 BRANCH=$(git symbolic-ref -q --short HEAD)
