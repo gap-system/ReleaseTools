@@ -440,7 +440,8 @@ GAPInput
 elif [ -f doc/make_doc ] ; then
     notice "Copying GAP package documentation for archives (using doc/make_doc)"
     cp -r "$SRC_DIR/doc" .
-    cp -r "$SRC_DIR/htm" .
+    test -d "$SRC_DIR/htm" && cp -r "$SRC_DIR/htm" .  # for packages with a single manual
+    test -d "$SRC_DIR/doc/htm" && cp -r "$SRC_DIR/doc/htm" doc/  # for packages with multiple manual
     rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
 fi
 
@@ -622,12 +623,14 @@ echo ""
 
 for PDFFile in $PDFFiles ; do
     FULLNAME="$TMP_DIR/$BASENAME/$PDFFile"
+    UPLOADNAME=${PDFFile#doc/}
+    UPLOADNAME=${UPLOADNAME////-}
     if [ ! -f "$FULLNAME" ] ; then
         error "could not find PDF"
     fi
     notice "Uploading PDF"
     response=$(curl --fail --progress-bar -o "$TMP_DIR/upload_pdf.log" \
-        -X POST "$UPLOAD_URL/$RELEASE_ID/assets?name=$BASENAME.pdf" \
+        -X POST "$UPLOAD_URL/$RELEASE_ID/assets?name=$UPLOADNAME" \
         -H "Accept: application/vnd.github.v3+json" \
         -H "Authorization: token $TOKEN" \
         -H "Content-Type: application/pdf" \
@@ -653,6 +656,10 @@ if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
 fi
 if [ -d "$TMP_DIR/$BASENAME/htm" ] ; then
     cp -r "$TMP_DIR/$BASENAME/htm" .
+fi
+if [ -d "$TMP_DIR/$BASENAME/doc/htm" ] ; then
+    mkdir -p doc
+    cp -r "$TMP_DIR/$BASENAME/doc/htm" doc/
 fi
 
 # adjust links to the GAP manuals and to the GAPDoc manuals.
