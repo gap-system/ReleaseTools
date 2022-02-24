@@ -632,7 +632,7 @@ for PDFFile in $PDFFiles ; do
         -H "Authorization: token $TOKEN" \
         -H "Content-Type: application/pdf" \
         --data-binary @"$FULLNAME")
-fi
+done
 
 ######################################################################
 #
