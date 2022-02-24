@@ -124,6 +124,9 @@ json_get_key() {
 # Setting COPYFILE_DISABLE prevents that. See <http://superuser.com/a/260264>
 export COPYFILE_DISABLE=1
 
+# set SOURCE_DATE_EPOCH for reproducible PDFs
+export SOURCE_DATE_EPOCH=0
+
 
 ######################################################################
 #
