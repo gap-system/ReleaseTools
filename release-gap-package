@@ -448,6 +448,7 @@ fi
 notice "Removing unnecessary files"
 # Remove recursively in case there is a .github directory
 rm -rf .git* .hg* .cvs* .circleci
+rm -f .mailmap
 rm -f .appveyor.yml .codecov.yml .travis.yml azure-pipelines.yml
 find . -name .DS_Store -exec rm -f {} +
 
