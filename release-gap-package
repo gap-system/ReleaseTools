@@ -436,13 +436,11 @@ GAPInput
     ! grep -E "WARNING: non resolved reference" makedoc.log >/dev/null 2>&1 || error "non resolved reference(s) found in the manual"
     rm -f makedoc.log
     rm -f doc/*.tex
-    rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
 elif [ -f doc/make_doc ] ; then
     notice "Copying GAP package documentation for archives (using doc/make_doc)"
     cp -r "$SRC_DIR/doc" .
     test -d "$SRC_DIR/htm" && cp -r "$SRC_DIR/htm" .  # for packages with a single manual
     test -d "$SRC_DIR/doc/htm" && cp -r "$SRC_DIR/doc/htm" doc/  # for packages with multiple manual
-    rm -f doc/*.aux doc/*.bbl doc/*.blg doc/*.brf doc/*.idx doc/*.ilg doc/*.ind doc/*.log doc/*.out doc/*.pnr doc/*.tst
 fi
 
 notice "Removing unnecessary files"
@@ -450,6 +448,9 @@ notice "Removing unnecessary files"
 rm -rf .git* .hg* .cvs* .circleci
 rm -f .mailmap
 rm -f .appveyor.yml .codecov.yml .travis.yml azure-pipelines.yml
+# remove TeX leftovers
+find -E doc -regex '.*\.(aux|bbl|blg|brf|idx|ilg|ind|log|out|pnr|toc|tst)' -exec rm -f {} +
+# remove macOS auxiliary files
 find . -name .DS_Store -exec rm -f {} +
 
 # execute .release script, if present
