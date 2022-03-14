@@ -628,8 +628,7 @@ echo ""
 
 for PDFFile in $PDFFiles ; do
     FULLNAME="$TMP_DIR/$BASENAME/$PDFFile"
-    UPLOADNAME=${PDFFile#doc/}
-    UPLOADNAME=${UPLOADNAME////-}
+    UPLOADNAME=$(echo "${PDFFile#doc/}" | sed 's;/;-;g')
     if [ ! -f "$FULLNAME" ] ; then
         error "could not find PDF"
     fi
