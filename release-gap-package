@@ -372,7 +372,9 @@ if [ "$MESSAGE" = "Not Found" ] ; then
     MESSAGE=  # release does not yet exist -> that's how we like it
 elif [ x"$RELEASE_ID" != x ] ; then
     # release already exists -> skip, error out or delete it
-    if [ "x$SKIP_EXISTING_RELEASE" = xyes ] ; then
+    if [ "x$ONLY_TARBALL" = xyes ] ; then
+        warning "release $TAG already exists on GitHub, but only tarballs were requested, so continue anyway"
+    elif [ "x$SKIP_EXISTING_RELEASE" = xyes ] ; then
         notice "release $TAG already exists on GitHub, skipping release"
         exit 0
     elif [ "x$FORCE" = xyes ] ; then
@@ -392,15 +394,16 @@ fi
 #
 # Validate the tag
 #
-HEAD_REF=$(git rev-parse --verify HEAD)
-TAG_REF=$(git rev-parse --verify "$TAG^{}")
+if [ "x$ONLY_TARBALL" = xno ] ; then
+    HEAD_REF=$(git rev-parse --verify HEAD)
+    TAG_REF=$(git rev-parse --verify "$TAG^{}")
 
-if [ "x$TAG_REF" != "x$HEAD_REF" ] ; then
-    error "tag $TAG is not the HEAD commit -- did you tag the right commit?"
+    if [ "x$TAG_REF" != "x$HEAD_REF" ] ; then
+        error "tag $TAG is not the HEAD commit -- did you tag the right commit?"
+    fi
+
+    echo ""
 fi
-
-
-echo ""
 
 
 ######################################################################
