@@ -452,11 +452,7 @@ rm -rf .git* .hg* .cvs* .circleci
 rm -f .mailmap
 rm -f .appveyor.yml .codecov.yml .travis.yml azure-pipelines.yml
 # remove TeX leftovers
-if [ "$(uname)" == "Darwin" ]; then
-  find -E doc -regex '.*\.(aux|bbl|blg|brf|idx|ilg|ind|log|out|pnr|toc|tst)' -exec rm -f {} +
-else 
-  find doc -regextype egrep -regex '.*\.(aux|bbl|blg|brf|idx|ilg|ind|log|out|pnr|toc|tst)' -exec rm -f {} +
-fi
+find doc -name '*.aux' -o -name '*.bbl' -o -name '*.blg' -o -name '*.brf' -o -name '*.idx' -o -name '*.ilg' -o -name '*.ind' -o -name '*.log' -o -name '*.out' -o -name '*.pnr' -o -name '*.toc' -o -name '*.tst'
 # remove macOS auxiliary files
 find . -name .DS_Store -exec rm -f {} +
 
@@ -658,11 +654,7 @@ cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
 rm -rf doc/ htm/
 if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
     mkdir -p doc/
-    if [ "$(uname)" == "Darwin" ]; then
-      cp $(find -E "$TMP_DIR/$BASENAME/doc" -regex '.*\.(css|html|jpg|js|png|txt)') doc/
-    else
-      cp $(find "$TMP_DIR/$BASENAME/doc" -regextype egrep -regex '.*\.(css|html|jpg|js|png|txt)') doc/    
-    fi
+    cp $(find "$TMP_DIR/$BASENAME/doc" -name '*.css' -o -name '*.html' -o -name '*.jpg' -o -name '*.js' -o -name '*.png' -o -name '*.txt') doc/    
 fi
 if [ -d "$TMP_DIR/$BASENAME/htm" ] ; then
     cp -r "$TMP_DIR/$BASENAME/htm" .
