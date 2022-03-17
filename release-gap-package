@@ -117,7 +117,7 @@ run_gap() {
 # we may end up parsing the same JSON data two times, but that
 # doesn't really matter as it is tiny.
 json_get_key() {
-    echo "$response" | python -c 'import json,sys;obj=json.load(sys.stdin);print(obj.get("'"$1"'",""))'
+    echo "$response" | $PYTHON -c 'import json,sys;obj=json.load(sys.stdin);print(obj.get("'"$1"'",""))'
 }
 
 # On Mac OS X, tar stores extended attributes in ._FOO files inside archives.
@@ -212,8 +212,16 @@ command -v curl >/dev/null 2>&1 ||
 command -v git >/dev/null 2>&1 ||
     error "the 'git' command was not found, please install it"
 
-command -v python >/dev/null 2>&1 ||
+if [ "x$PYTHON" != x ] ; then
+    :
+elif command -v python3 >/dev/null 2>&1; then
+    PYTHON=python3
+elif command -v python >/dev/null 2>&1; then
+    PTYHON=python
+else
     error "the 'python' command was not found, please install it"
+fi
+notice "Using PYTHON = '$PYTHON'"
 
 verify_git_clean
 
