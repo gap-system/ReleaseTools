@@ -523,8 +523,8 @@ for EXT in $ARCHIVE_FORMATS ; do
     FULLNAME="$TMP_DIR/$ARCHIVENAME"
     notice "Creating $ARCHIVENAME ..."
     case $EXT in
-    .tar.gz)  tar --owner=0 --group=0 --numeric-owner -cf - "$BASENAME" | gzip -9c > "$ARCHIVENAME" ;;
-    .tar.bz2) tar --owner=0 --group=0 --numeric-owner -cf - "$BASENAME" | bzip2 -9c > "$ARCHIVENAME" ;;
+    .tar.gz)  tar cf - "$BASENAME" | gzip -9c > "$ARCHIVENAME" ;;
+    .tar.bz2) tar cf - "$BASENAME" | bzip2 -9c > "$ARCHIVENAME" ;;
     .zip)     zip -r9 --quiet "$ARCHIVENAME" "$BASENAME" ;;
     *)
         warning "unsupported archive format $EXT"
