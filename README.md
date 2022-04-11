@@ -140,14 +140,14 @@ executable.
    You should also verify that there are no uncommitted local changes,
    and if there are, either commit them or remove them.
 
-2. Make sure there is a `gh-pages` subdirectory which contains an up-to-date checkout
+2. Make sure there is a `gh-pages` subdirectory in `foo` which contains an up-to-date checkout
    of the `gh-pages` branch of your repository.
    
     ```
-    cd gh-pages && git pull && cd ..
+    cd gh-pages && git checkout gh-pages && git pull && cd ..
     ```
 
-   If there is no `gh-pages` directory, you need to create on as described
+   If there is no `gh-pages` branch, you need to create on as described
    in the README of [GitHubPagesForGAP][].
 
 3. Update the version and release date in `PackageInfo.g`.
