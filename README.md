@@ -147,8 +147,8 @@ executable.
     cd gh-pages && git checkout gh-pages && git pull && cd ..
     ```
 
-   If there is no `gh-pages` branch, you need to create on as described
-   in the README of [GitHubPagesForGAP][].
+   If there is no `gh-pages` directory. resp. no `gh-pages` branch, you need
+   to create one as described in the README of [GitHubPagesForGAP][].
 
 3. Update the version and release date in `PackageInfo.g`.
 
