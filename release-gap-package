@@ -409,7 +409,12 @@ if [ "x$ONLY_TARBALL" = xno ] ; then
     TAG_REF=$(git rev-parse --verify "$TAG^{}")
 
     if [ "x$TAG_REF" != "x$HEAD_REF" ] ; then
-        error "tag $TAG is not the HEAD commit -- did you tag the right commit?"
+        if [ "x$FORCE" = xyes ] ; then
+            notice "Force update of git tag $TAG"
+            git tag -f "$TAG"
+        else
+            error "tag $TAG is not the HEAD commit -- did you tag the right commit?"
+        fi
     fi
 
     echo ""
