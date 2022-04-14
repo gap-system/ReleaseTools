@@ -214,12 +214,14 @@ command -v git >/dev/null 2>&1 ||
 
 if [ "x$PYTHON" != x ] ; then
     :
-elif command -v python3 >/dev/null 2>&1; then
-    PYTHON=python3
 elif command -v python >/dev/null 2>&1; then
     PTYHON=python
+elif command -v python3 >/dev/null 2>&1; then
+    PYTHON=python3
+elif command -v python2 >/dev/null 2>&1; then
+    PYTHON=python2
 else
-    error "the 'python' command was not found, please install it"
+    error "Python not found, please install it and/or set the PYTHON environment variable to the path of a python executable"
 fi
 notice "Using PYTHON = '$PYTHON'"
 
