@@ -467,7 +467,7 @@ rm -rf .git* .hg* .cvs* .circleci
 rm -f .mailmap .clang-format
 rm -f .appveyor.yml .codecov.yml .travis.yml azure-pipelines.yml
 # remove TeX leftovers
-find doc -name '*.aux' -o -name '*.bbl' -o -name '*.blg' -o -name '*.brf' -o -name '*.idx' -o -name '*.ilg' -o -name '*.ind' -o -name '*.log' -o -name '*.out' -o -name '*.pnr' -o -name '*.toc' -o -name '*.tst' -exec rm -f {} +
+find doc -name '*.aux' -o -name '*.bbl' -o -name '*.blg' -o -name '*.brf' -o -name '*.idx' -o -name '*.ilg' -o -name '*.ind' -o -name '*.log' -o -name '*.out' -o -name '*.pnr' -o -name '*.toc' -o -name '*.tst' | xargs rm -f
 # remove macOS auxiliary files
 find . -name .DS_Store -exec rm -f {} +
 
