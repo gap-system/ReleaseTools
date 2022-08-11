@@ -71,20 +71,37 @@ EOF
 #
 # Various little helper functions
 
+if test -t 1; then
 
-# print notices in green
+    # see if it supports colors...
+    ncolors=$(tput colors)
+
+    if test -n "$ncolors" && test $ncolors -ge 8; then
+        bold="$(tput bold)"
+        underline="$(tput smul)"
+        standout="$(tput smso)"
+        normal="$(tput sgr0)"
+        black="$(tput setaf 0)"
+        red="$(tput setaf 1)"
+        green="$(tput setaf 2)"
+        yellow="$(tput setaf 3)"
+        blue="$(tput setaf 4)"
+        magenta="$(tput setaf 5)"
+        cyan="$(tput setaf 6)"
+        white="$(tput setaf 7)"
+    fi
+fi
+
 notice() {
-    printf '\033[32m%s\033[0m\n' "$*"
+    printf "${green}%s${normal}\n" "$*"
 }
 
-# print warnings in yellow
 warning() {
-    printf '\033[33mWARNING: %s\033[0m\n' "$*"
+    printf "${yellow}WARNING: %s${normal}\n" "$*"
 }
 
-# print error in red and exit
 error() {
-    printf '\033[31mERROR: %s\033[0m\n' "$*"
+    printf "${red}ERROR: %s${normal}\n" "$*" 1>&2
     exit 1
 }
 
