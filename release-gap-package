@@ -50,6 +50,7 @@ Paths
   --tmpdir <path>                  path of temporary directory [Default: tmp subdirectory of srcdir]
   --webdir <path>                  path of web directory [Default: gh-pages subdirectory of srcdir]
   --update-script <file>           path of the update script [Default: update.g in webdir]
+  --release-script <file>          path of the release script [Default: .release in srcdir (must be checked into git)]
 
 Custom settings
   --token <oauth>                  GitHub access token
@@ -167,11 +168,13 @@ while [ x"$1" != x ]; do
     --webdir ) WEB_DIR="$1"; shift ;;
     --tmpdir ) TMP_DIR="$1"; shift ;;
     --update-script ) UPDATE_SCRIPT="$1"; shift ;;
+    --release-script ) RELEASE_SCRIPT="$1"; shift ;;
 
     --srcdir=*) SRC_DIR=${option#--srcdir=}; shift ;;
     --webdir=*) WEB_DIR=${option#--webdir=}; shift ;;
     --tmpdir=*) TMP_DIR=${option#--tmpdir=}; shift ;;
     --update-script=*) UPDATE_SCRIPT=${option#--update-script=}; shift ;;
+    --release-script=*) RELEASE_SCRIPT=${option#--release-script=}; shift ;;
 
     --token ) TOKEN="$1"; shift ;;
 
@@ -216,6 +219,11 @@ if [ "x$UPDATE_SCRIPT" = x ] ; then
 fi
 if [ ! -f "$UPDATE_SCRIPT" ] ; then
     error "could not find update script \"${UPDATE_SCRIPT}\""
+fi
+
+# Check for presence of the release script (if given)
+if [ "x$RELEASE_SCRIPT" != x ] && [ ! -f "$RELEASE_SCRIPT" ] ; then
+    error "could not find release script \"${RELEASE_SCRIPT}\""
 fi
 
 # Check whether GAP is usable
@@ -488,14 +496,18 @@ find doc -name '*.aux' -o -name '*.bbl' -o -name '*.blg' -o -name '*.brf' -o -na
 # remove macOS auxiliary files
 find . -name .DS_Store -exec rm -f {} +
 
-# execute .release script, if present
-if [ -f .release ] ; then
-    # the .release script can perform additional preparation, e.g.:
-    # * add files for distribution which are not part of the repository;
-    # * remove further files not intended for distribution (e.g. scripts/ directory);
-    # * build the package manual in a custom way;
-    # * perform additional sanity checks;
-    # * ...
+# execute release script, if present
+# the release script can perform additional preparation, e.g.:
+# * add files for distribution which are not part of the repository;
+# * remove further files not intended for distribution (e.g. scripts/ directory);
+# * build the package manual in a custom way;
+# * perform additional sanity checks;
+# * ...
+if [ "x$RELEASE_SCRIPT" != x ] ; then
+    . "$RELEASE_SCRIPT"
+    # do not delete the custom release script since it might be reused, for example by additional packages of a monorepo
+    # if it should be deleted, it can always simply delete itself
+elif [ -f .release ] ; then
     . ./.release
     rm -f .release
 fi
