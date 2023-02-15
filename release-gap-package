@@ -101,13 +101,13 @@ run_gap() {
   # for people whose gap script is broken (by not honoring -A, thus loading
   # Browse, which inserts that extra character). I am looking at you,
   # Sebastian!
+  mkdir -p "$TMP_DIR"
   gap_output=$( \
     (echo 'OnBreak:=function() Print("FATAL ERROR"); FORCE_QUIT_GAP(1); end;;' ; cat - ; echo ; echo "FORCE_QUIT_GAP(0);") \
     | $GAP -A -q -b 2>&1 \
-    | tr -d '\r' )
-  mkdir -p "$TMP_DIR"
-  echo "$gap_output" > "$TMP_DIR/gap-error.log"
-  if echo "$gap_output" | grep -q '\(Error\|FATAL ERROR\|Syntax \)' ; then
+    | tr -d '\r' \
+    | tee "$TMP_DIR/gap-error.log" )
+  if grep -q '\(Error\|FATAL ERROR\|Syntax \)' "$TMP_DIR/gap-error.log" ; then
     error "there was an error running GAP, see $TMP_DIR/gap-error.log"
   fi
 }
