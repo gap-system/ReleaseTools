@@ -352,6 +352,7 @@ fi
 #
 # Determine GitHub repository and username, and the current branch
 #
+if [ $ONLY_TARBALL = no ] ; then
 notice "Using GitHub repository $REPO"
 
 if [ "x$GITHUB_USER" = x ] ; then
@@ -362,9 +363,13 @@ if [ "x$GITHUB_USER" = x ] ; then
 fi
 notice "Using GitHub username $GITHUB_USER"
 
-BRANCH=$(git symbolic-ref -q --short HEAD)
+BRANCH=$(git symbolic-ref -q --short HEAD || echo)
+if [ "x$BRANCH" = x ] ; then
+    notice "no branch! Cannot proceed, exiting."
+    exit 1
+fi
 notice "Using branch $BRANCH"
-
+fi
 
 ######################################################################
 #
