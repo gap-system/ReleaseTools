@@ -130,6 +130,10 @@ run_gap() {
   fi
 }
 
+abspath() {
+    $PYTHON -c "import os; print(os.path.abspath('$1'))"
+}
+
 # helper function for parsing GitHub's JSON output. Right now,
 # we only extract the value of a single key at a time. This means
 # we may end up parsing the same JSON data two times, but that
@@ -226,11 +230,6 @@ if [ "x$RELEASE_SCRIPT" != x ] && [ ! -f "$RELEASE_SCRIPT" ] ; then
     error "could not find release script \"${RELEASE_SCRIPT}\""
 fi
 
-# Check whether GAP is usable
-GAP=${GAP:-gap}
-command -v "$GAP" >/dev/null 2>&1 ||
-    error "could not find GAP (perhaps set the GAP environment variable?)"
-
 command -v curl >/dev/null 2>&1 ||
     error "the 'curl' command was not found, please install it"
 
@@ -250,7 +249,20 @@ elif command -v python2 >/dev/null 2>&1; then
 else
     error "Python not found, please install it and/or set the PYTHON environment variable to the path of a python executable"
 fi
+
+# convert it into an absolute path
+PYTHON=$(abspath $(command -v "$PYTHON"))
 notice "Using PYTHON = '$PYTHON'"
+
+# Check whether GAP is usable
+GAP=${GAP:-gap}
+command -v "$GAP" >/dev/null 2>&1 ||
+    error "could not find GAP (perhaps set the GAP environment variable?)"
+
+# convert it into an absolute path
+GAP=$(abspath $(command -v "$GAP"))
+notice "Using GAP = '$GAP'"
+
 
 verify_git_clean
 
