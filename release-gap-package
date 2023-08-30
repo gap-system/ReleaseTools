@@ -230,7 +230,9 @@ command -v git >/dev/null 2>&1 ||
     error "the 'git' command was not found, please install it"
 
 if [ "x$PYTHON" != x ] ; then
-    :
+    if ! command -v "$PYTHON" >/dev/null 2>&1; then
+      error "Could not execute python from PYTHON environment variable"
+    fi
 elif command -v python >/dev/null 2>&1; then
     PYTHON=python
 elif command -v python3 >/dev/null 2>&1; then
