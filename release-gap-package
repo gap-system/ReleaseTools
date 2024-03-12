@@ -717,7 +717,7 @@ cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
 rm -rf doc/ htm/
 if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
     mkdir -p doc/
-    cp $(find "$TMP_DIR/$BASENAME/doc" -name '*.css' -o -name '*.html' -o -name '*.jpg' -o -name '*.js' -o -name '*.png' -o -name '*.txt') doc/    
+    find "$TMP_DIR/$BASENAME/doc" \( -name '*.css' -o -name '*.html' -o -name '*.jpg' -o -name '*.js' -o -name '*.png' -o -name '*.txt' \) -exec echo {} doc/ \;
 fi
 if [ -d "$TMP_DIR/$BASENAME/htm" ] ; then
     cp -r "$TMP_DIR/$BASENAME/htm" .
