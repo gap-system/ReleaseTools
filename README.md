@@ -324,15 +324,19 @@ so-called "personal access token". You can generate such a token as follows
 
 1. Go to <https://github.com/settings/tokens>.
 
-2. Click **Generate new token**.
+2. Click **Generate new token** and then select "Generate new token (classic)".
 
-3. Select the scope "public_repo", and give your token a descriptive name.
+3. Select the scope "public_repo", and give your token a descriptive name,
+   e.g. "for ReleaseTools".
 
-4. Click **Generate token** at the bottom of the page.
+4. (Optional but recommended) Change the "Expiration" to a larger value,
+   possibly even "No expiration".
 
-5. Copy the token to your clipboard. For security reasons, after you navigate
+5. Click **Generate token** at the bottom of the page.
+
+6. Copy the token to your clipboard. For security reasons, after you navigate
    off the page, you will not be able to see the token again. You therefore
-   should store it somewhere, e.g. with option 3 in the following list.
+   should store it somewhere, e.g. with option 1 in the following list.
 
 There are multiple ways to tell the `release-gap-package` script what your token is.
 In order of their precedence from lowest to highest:
@@ -367,6 +371,6 @@ the [issue tracker](https://github.com/gap-system/ReleaseTools/issues).
 
 You can also contact me directly via [email](mailto:max@quendi.de).
 
-Copyright (c) 2013-2020 Max Horn
+Copyright (c) 2013-2024 Max Horn
 
 [GitHubPagesForGAP]: https://github.com/gap-system/GitHubPagesForGAP
