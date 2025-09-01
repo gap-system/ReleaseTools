@@ -280,6 +280,9 @@ tmp:=GAPInfo.PackageInfoCurrent.Date;; # either YYYY-MM-DD or DD/MM/YYYY format
 Print("DATE=\"",tmp,"\"\n");
 Print("PackageInfoURL=\"",GAPInfo.PackageInfoCurrent.PackageInfoURL,"\"\n");
 Print("README_URL=\"",GAPInfo.PackageInfoCurrent.README_URL,"\"\n");
+if IsBound(GAPInfo.PackageInfoCurrent.CHANGES_URL) then
+    Print("CHANGES_URL=\"",GAPInfo.PackageInfoCurrent.CHANGES_URL,"\"\n");
+fi;
 # extract archive formats; these can be comma or space separated, we want
 # to output them space separated
 tmp := GAPInfo.PackageInfoCurrent.ArchiveFormats;;
@@ -569,6 +572,19 @@ README_NAME=$(basename "$README_URL")
 
 ######################################################################
 #
+# Extract CHANGES filename from CHANGES_URL
+#
+CHANGES_NAME=$(basename "$CHANGES_URL")
+[ ! -z "$CHANGES_NAME" ] ||
+    notice "No CHANGES file is specified in PackageInfo.g"
+if [ ! -z "$CHANGES_NAME" ]; then
+    [ -f "$CHANGES_NAME" ] ||
+        error "No file named '$CHANGES_NAME' exists; is your CHANGES_URL valid?"
+fi
+
+
+######################################################################
+#
 # Create all archive files requested by ARCHIVE_FORMATS
 #
 cd "$TMP_DIR"
@@ -713,6 +729,9 @@ cd "$WEB_DIR"
 git pull --ff-only
 
 cp "$TMP_DIR/$BASENAME/$README_NAME" .
+if [ ! -z "$CHANGES_NAME" ]; then
+    cp "$TMP_DIR/$BASENAME/$CHANGES_NAME" .
+fi
 cp "$TMP_DIR/$BASENAME/PackageInfo.g" .
 rm -rf doc/ htm/
 if [ -f "$TMP_DIR/$BASENAME/doc/chap0.html" ] ; then
